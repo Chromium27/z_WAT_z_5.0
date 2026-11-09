@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>;журналы ЦСО</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #eef2f7;
+  margin: 0;
+  padding: 20px;
+  color: #1f2937;
+}
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px 40px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+}
+h1 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 24px;
+  font-size: 26px;
+}
+h2 { color: #1e3a8a; font-size: 20px; margin: 0 0 14px; }
+h3 { color: #1e3a8a; font-size: 16px; margin: 16px 0 10px; }
+
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+  align-items: center;
+}
+.top-bar button {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-clear { background: #ef4444; color: #fff; }
+.btn-clear:hover { background: #dc2626; }
+.btn-print { background: #059669; color: #fff; }
+.btn-print:hover { background: #047857; }
+.btn-sync { background: #3b82f6; color: #fff; }
+.btn-sync:hover { background: #2563eb; }
+
+.tabs, .subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.tab-btn, .subtab-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.tab-btn.active, .subtab-btn.active { background: #1e40af; color: #fff; }
+.tab-btn:hover, .subtab-btn:hover { background: #93c5fd; }
+.tab-btn.active:hover, .subtab-btn.active:hover { background: #1e40af; }
+.tab-content, .subtab-content { display: none; }
+.tab-content.active, .subtab-content.active { display: block; }
+.hint { color: #64748b; font-size: 14px; margin: 0 0 14px; }
+
+/* === СПЕЦИАЛЬНЫЙ БЛОК ОБ2 === */
+.special-section {
+  background: #f0f9ff;
+  border: 2px solid #bae6fd;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+.special-section h2 { color: #0369a1; font-size: 18px; margin-bottom: 14px; }
+.special-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+}
+.special-card {
+  background: #fff;
+  border: 1px solid #e0f2fe;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+.special-card h4 { margin: 0 0 8px; color: #0369a1; font-size: 14px; }
+.special-card input[type="text"],
+.special-card input[type="number"] {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+/* === ТАБЛИЦЫ НАБОРОВ === */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+.sets-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.sets-table th, .sets-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+.sets-table th { background: #f1f5f9; font-weight: 600; color: #1e3a8a; }
+.sets-table tr:last-child td { border-bottom: none; }
+.sets-table input[type="text"], .sets-table input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.sets-table input:focus { border-color: #3b82f6; outline: none; }
+.sets-table input:disabled { background: #e2e8f0; cursor: not-allowed; opacity: 0.6; }
+
+.add-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.add-panel input {
+  padding: 9px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  min-width: 120px;
+}
+.add-panel button {
+  padding: 9px 18px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.add-panel button:hover { background: #1d4ed8; }
+
+.list { margin-bottom: 16px; }
+.set-item, .imn-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+.set-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 6px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.set-item-header button, .imn-item button {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.set-item-header button:hover, .imn-item button:hover { background: #dc2626; }
+.set-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 4px 12px;
+  font-size: 12px;
+  color: #334155;
+}
+.set-detail span { white-space: nowrap; }
+
+/* === ИТОГИ НА ЭКРАНЕ === */
+.summary-box {
+  margin-top: 30px;
+  padding: 20px 22px;
+  background: #fff7ed;
+  border: 2px solid #fb923c;
+  border-radius: 12px;
+}
+.summary-box.ob1-theme { background: #eff6ff; border-color: #60a5fa; }
+.summary-box h2 { text-align: center; color: #c2410c; }
+.summary-box.ob1-theme h2 { color: #1d4ed8; }
+.summary-group-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin: 14px 0 6px;
+  color: #1e3a8a;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 4px;
+}
+.summary-box table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.summary-box th, .summary-box td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid #fed7aa;
+}
+.summary-box th { color: #9a3412; background: #ffedd5; }
+.summary-box.ob1-theme th { color: #1e40af; background: #dbeafe; border-bottom-color: #bfdbfe; }
+.summary-box.ob1-theme td { border-bottom-color: #bfdbfe; }
+.summary-box .summary-total {
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  background: #ea580c;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 14px;
+}
+.summary-box.ob1-theme .summary-total { background: #2563eb; }
+
+/* === СВОДНЫЙ БЛОК В НИЗУ СТРАНИЦЫ === */
+.global-summary-box {
+  margin-top: 35px;
+  padding: 22px 24px;
+  background: #f0fdf4;
+  border: 2px solid #22c55e;
+  border-radius: 14px;
+}
+.global-summary-box h2 {
+  text-align: center;
+  color: #15803d;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+.global-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.global-summary-table th, .global-summary-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dcfce7;
+  text-align: left;
+}
+.global-summary-table th {
+  background: #dcfce7;
+  color: #14532d;
+  font-weight: 700;
+}
+.global-summary-table td:nth-child(2),
+.global-summary-table td:nth-child(3),
+.global-summary-table th:nth-child(2),
+.global-summary-table th:nth-child(3) {
+  text-align: center;
+}
+.global-summary-table tfoot td {
+  font-weight: 700;
+  background: #15803d;
+  color: #fff;
+  font-size: 15px;
+}
+
+/* === МОДАЛЬНЫЕ ОКНА === */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+.modal-overlay.active { display: block; }
+.modal-container {
+  background: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+.modal-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  background: #f8fafc;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+.modal-controls label { font-size: 12px; font-weight: 600; color: #475569; display: block; margin-bottom: 4px; }
+.modal-controls input, .modal-controls select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* ФОРМА ТАБЛИЦЫ ДЛЯ ПЕЧАТИ ПО САНПИН */
+.print-page {
+  background: #fff;
+  padding: 10px;
+}
+.journal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12px;
+  color: #000;
+}
+.journal-table th, .journal-table td {
+  border: 1px solid #000;
+  padding: 5px 6px;
+  text-align: center;
+  vertical-align: middle;
+}
+.journal-table th { font-weight: bold; background: #fff; }
+.journal-table td[contenteditable="true"] { outline: none; }
+.journal-table td[contenteditable="true"]:focus { background: #eff6ff; }
+.journal-table .col-left { text-align: left; }
+.summary-row { font-weight: bold; background: #f8fafc; }
+
+/* Специальные стили для журнала автоклавов (как на фото) */
+.autoclave-print-table { table-layout: fixed; }
+.autoclave-print-table th { font-size: 11px; line-height: 1.1; padding: 4px 2px; }
+.autoclave-print-table td { height: 25px; padding: 2px 4px; font-size: 12px; }
+.autoclave-print-table th:nth-child(1) { width: 4%; }
+.autoclave-print-table th:nth-child(2) { width: 5%; }
+.autoclave-print-table th:nth-child(3) { width: 22%; }
+.autoclave-print-table th:nth-child(4) { width: 4%; }
+.autoclave-print-table th:nth-child(5) { width: 6%; }
+.autoclave-print-table th:nth-child(6) { width: 6%; }
+.autoclave-print-table th:nth-child(7) { width: 6%; }
+.autoclave-print-table th:nth-child(8) { width: 6%; }
+.autoclave-print-table th:nth-child(9) { width: 6%; }
+.autoclave-print-table th:nth-child(10) { width: 6%; }
+.autoclave-print-table th:nth-child(11) { width: 6%; }
+.autoclave-print-table th:nth-child(12) { width: 15%; }
+.autoclave-print-table th:nth-child(13) { width: 8%; }
+
+/* Стили для журналов мойки и автоклавов внутри системы */
+.panel {
+  background: #fff; border: 1px solid #cbd5e1; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 16px; overflow: hidden;
+}
+.panel-header {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 18px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc); border: none; border-bottom: 1px solid #e2e8f0;
+  font-size: 15px; font-weight: 600; color: #1e3a8a; text-align: left; cursor: pointer;
+}
+.panel-body { padding: 14px 18px; }
+.collapsible.collapsed .panel-body { display: none; }
+.badge { display: inline-block; min-width: 28px; text-align: center; padding: 3px 9px; border-radius: 999px; background: #dbeafe; color: #1e40af; font-size: 12px; font-weight: 700; }
+.input-table { border-collapse: collapse; width: 100%; background: #fff; font-size: 14px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+.input-table th, .input-table td { border-bottom: 1px solid #e2e8f0; padding: 8px 10px; vertical-align: middle; }
+.input-table th { background: #f1f5f9; text-align: left; font-weight: 600; color: #1e3a8a; }
+.input-table input { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+.input-table input:focus { border-color: #3b82f6; outline: none; }
+.input-table input:disabled { background: #e2e8f0; cursor: not-allowed; opacity: 0.6; }
+.row-flex { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.dept-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px; border: 1px dashed #cbd5e1; border-radius: 10px; margin-bottom: 8px; background: #f8fafc; }
+.dept-row input, .dept-row select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+button { padding: 9px 18px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-secondary { background: #fff; color: #1e40af; border: 1px solid #cbd5e1; }
+.btn-secondary:hover { background: #f1f5f9; }
+.hidden { display: none !important; }
+
+.journal-table-main { border-collapse: separate; border-spacing: 0; width: 100%; background: #fff; font-size: 13px; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+.journal-table-main th, .journal-table-main td { border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; padding: 8px; vertical-align: top; }
+.journal-table-main th:last-child, .journal-table-main td:last-child { border-right: none; }
+.journal-table-main thead th { background: #f1f5f9; font-weight: 600; color: #1e3a8a; text-align: center; }
+.journal-table-main tbody th { background: #f8fafc; text-align: center; width: 60px; font-weight: 600; color: #475569; }
+.slot { line-height: 1.3; padding: 3px 6px; margin: 2px 0; border-radius: 5px; }
+.slot.free { color: #94a3b8; }
+.slot.block { background: #fee2e2; color: #991b1b; }
+.slot.probe { background: #fef3c7; color: #92400e; font-weight: 600; }
+.slot.dept { background: #dcfce7; color: #166534; }
+.slot.item { background: #dbeafe; }
+
+@media print {
+  body { background: #fff; padding: 0; margin: 0; }
+  .app, .modal-header, .modal-controls, .no-print { display: none !important; }
+  .modal-overlay { position: static; background: none; padding: 0; display: block !important; }
+  .modal-container { box-shadow: none; padding: 0; max-width: 100%; margin: 0; border-radius: 0; }
+  .journal-table th, .journal-table td { border: 1px solid #000 !important; }
+}
+</style>
+<style id="dynamic-print-style"></style>
+</head>
+<body>
+
+<div class="app">
+  <h1>ЦСО — Комплексная автоматизация</h1>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-wash">Журнал мойки</button>
+    <button class="tab-btn" data-tab="tab-autoclave">Журнал автоклавов</button>
+    <button class="tab-btn" data-tab="tab-azopyram">Журнал Азопирама</button>
+  </div>
+
+  <!-- ==================== ЖУРНАЛ МОЙКИ ==================== -->
+  <div id="tab-wash" class="tab-content active">
+    <div class="top-bar" style="justify-content: flex-start;">
+      <button class="btn-sync" onclick="syncDataToAzopyram()">🔄 Синхронизировать с Азопирамом</button>
+      <button class="btn-print" onclick="openWashPrintModal()">🖨️ Печать журнала мойки</button>
+      <button class="btn-primary" id="setupAutoclaveBtn">перенести данные в журнал автоклавов ➔</button>
+    </div>
+
+    <div class="panel collapsible" id="panel-g1">
+      <button class="panel-header" type="button" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="panel-title" style="flex:1;">Группа 1 — ОБ1, перфораторы, дерматомы, лапароскопы</span>
+        <span class="badge" id="badge-g1">0</span>
+        <span style="font-size:12px;">▼</span>
+      </button>
+      <div class="panel-body">
+        <div class="hint">Столбец «Порядковые номера»: введите номера через запятую. Столбец «Количество»: введите сразу количество.</div>
+        <div class="row-flex" style="margin: 10px 0;">
+          <label style="font-weight: 600; font-size:14px;">Количество мест для "после пробы ОБ1": 
+            <input type="number" id="probe-slots-g1" min="1" max="6" placeholder="2" style="width: 60px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </label>
+          <span class="hint" style="margin:0;">(По умолчанию 2)</span>
+        </div>
+        <div id="group1"></div>
+      </div>
+    </div>
+
+    <div class="panel collapsible" id="panel-g2">
+      <button class="panel-header" type="button" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="panel-title" style="flex:1;">Группа 2 — ОБ2: ТО1, ТО2, НХО</span>
+        <span class="badge" id="badge-g2">0</span>
+        <span style="font-size:12px;">▼</span>
+      </button>
+      <div class="panel-body"><div id="group2"></div></div>
+    </div>
+
+    <div class="panel collapsible" id="panel-g3">
+      <button class="panel-header" type="button" onclick="this.parentElement.classList.toggle('collapsed')">
+        <span class="panel-title" style="flex:1;">Группа 3 — ОБ2: ОО1, ОО2</span>
+        <span class="badge" id="badge-g3">0</span>
+        <span style="font-size:12px;">▼</span>
+      </button>
+      <div class="panel-body"><div id="group3"></div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-body">
+        <h3>Параметры списания</h3>
+        <div class="row-flex" style="margin-bottom:12px">
+          <span>С какого времени списывать плазму?</span>
+          <label><input type="radio" name="plasma" value="14" checked> 14:00</label>
+          <label><input type="radio" name="plasma" value="15"> 15:00</label>
+          <label><input type="radio" name="plasma" value="none"> Нет плазмы</label>
+        </div>
+        <div id="plasma-custom-container" style="margin-bottom:12px; padding:10px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px;">
+          <div class="hint" style="margin-bottom:8px; font-weight:600;">Дополнительные инструменты для плазмы:</div>
+          <div id="plasma-custom-list"></div>
+          <button type="button" class="btn-secondary" onclick="addPlasmaCustomRow()" style="padding:4px 10px; font-size:12px; margin-top:4px;">+ Добавить инструмент</button>
+        </div>
+        <div class="row-flex">
+          <label>Сколько аспирационных емкостей? <input id="aspiration" type="number" min="0" step="1" value="0" style="width:80px; padding:8px 10px; border: 1px solid #cbd5e1; border-radius: 6px;"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-body">
+        <label class="row-flex" style="margin-bottom:10px; font-weight:600; font-size:14px;">
+          <input type="checkbox" id="hasDepts"> Есть отделения?
+        </label>
+        <div id="deptSection" class="hidden">
+          <div class="hint">Укажите название, время, мойку и максимальное количество наборов (0–6).</div>
+          <div id="deptList" style="margin-top:10px;"></div>
+          <button type="button" id="addDept" class="btn-secondary" style="margin-top:10px;">+ Добавить отделение</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-body">
+        <h3>Предварительная сверка</h3>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-top:10px;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px;">
+            <div style="font-size:12px; color:#64748b; font-weight:600;">ОБ1 + инструменты</div>
+            <div style="font-size:24px; font-weight:800; color:#1e40af;" id="preview-g1">0</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px;">
+            <div style="font-size:12px; color:#64748b; font-weight:600;">ОБ2 ТО1, ТО2, НХО</div>
+            <div style="font-size:24px; font-weight:800; color:#1e40af;" id="preview-g2">0</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px;">
+            <div style="font-size:12px; color:#64748b; font-weight:600;">ОБ2 ОО1, ОО2</div>
+            <div style="font-size:24px; font-weight:800; color:#1e40af;" id="preview-g3">0</div>
+          </div>
+        </div>
+        <div style="margin-top:12px; font-size:14px;">Всего к списанию: <b id="preview-total">0</b> поз. · Аспирационные ёмкости: <b id="preview-asp">0</b> шт.</div>
+      </div>
+    </div>
+
+    <div class="top-bar" style="justify-content: flex-start; margin-top:20px;">
+      <button class="btn-primary" onclick="buildWash()">Сформировать журнал мойки</button>
+      <button class="btn-clear" onclick="clearWashData()">🗑️ Очистить всё</button>
+    </div>
+
+    <div id="wash-journal-output" style="margin-top:20px;"></div>
+  </div>
+
+  <!-- ==================== ЖУРНАЛ АВТОКЛАВОВ ==================== -->
+  <div id="tab-autoclave" class="tab-content">
+    <div class="top-bar" style="justify-content: flex-start;">
+      <button class="btn-print" onclick="openAutoclavePrintModal()">🖨️ Печать журнала автоклавов</button>
+      <button class="btn-clear" onclick="clearAutoclaveData()">🗑️ Очистить всё</button>
+    </div>
+    <div id="autoclave-setup" class="panel hidden">
+      <div class="panel-body">
+        <h2>Настройка автоклавов</h2>
+        <div class="hint" style="margin-bottom:12px;">Время начала автоклава по умолчанию: последняя мойка + 5 часов. Максимум 2 автоклава в час.</div>
+        <div id="autoclave-setup-content"></div>
+        <div style="margin-top:20px;">
+          <button class="btn-primary" onclick="buildAutoclaves()">Сформировать журнал автоклавов</button>
+        </div>
+      </div>
+    </div>
+    <div id="autoclave-journal" class="hidden" style="margin-top:20px;"></div>
+  </div>
+
+  <!-- ==================== ЖУРНАЛ АЗОПИРАМА ==================== -->
+  <div id="tab-azopyram" class="tab-content">
+    <div class="top-bar" style="justify-content: flex-start;">
+      <button class="btn-print" onclick="openAzopyramPrintModal()">🖨️ Печать / Предпросмотр</button>
+      <button class="btn-clear" onclick="clearAzopyram()">🗑️ Очистить Азопирам</button>
+    </div>
+
+    <div class="subtabs">
+      <button class="subtab-btn active" data-sub="ob1">ОБ1</button>
+      <button class="subtab-btn" data-sub="ob2">ОБ2</button>
+      <button class="subtab-btn" data-sub="dept">Отделения</button>
+    </div>
+
+    <!-- ОБ1 -->
+    <div class="subtab-content active" id="sub-ob1">
+      <p class="hint">Отделение ОБ1 — выберите наборы (введите номера ИЛИ количество)</p>
+      <div class="table-responsive">
+        <table class="sets-table">
+          <thead>
+            <tr><th>Название набора</th><th width="30%">Порядковые номера</th><th width="30%">Количество</th></tr>
+          </thead>
+          <tbody id="ob1-sets-table-body"></tbody>
+        </table>
+      </div>
+      <div class="add-panel">
+        <input type="text" id="ob1-imn-name" placeholder="Название ИМН">
+        <input type="number" id="ob1-imn-qty" value="1" min="1">
+        <button onclick="addAzIMN('ob1')">Добавить доп. ИМН</button>
+      </div>
+      <h3>Выбранные наборы:</h3>
+      <div id="ob1-sets-list" class="list"></div>
+      <h3>Дополнительные ИМН:</h3>
+      <div id="ob1-imn-list" class="list"></div>
+      <div class="summary-box ob1-theme">
+        <h2>Итог ОБ1</h2>
+        <div id="ob1-summary-totals"></div>
+        <div class="summary-total" id="ob1-summary-total"></div>
+      </div>
+    </div>
+
+    <!-- ОБ2 -->
+    <div class="subtab-content" id="sub-ob2">
+      <div class="special-section">
+        <h2>Специальные категории ОБ2</h2>
+        <div class="special-grid">
+          <div class="special-card">
+            <h4>1) Плазма (Автодобавление)</h4>
+            <input type="text" id="ob2-plasma-name" placeholder="Название инструмента" oninput="handleAzPlasmaAutoInput()">
+            <input type="number" id="ob2-plasma-qty" value="1" min="1" placeholder="Кол-во" oninput="handleAzPlasmaAutoInput()">
+          </div>
+          <div class="special-card">
+            <h4>2) Головка камеры</h4>
+            <label style="font-size:12px; color:#475569;">Количество головок:</label>
+            <input type="number" id="ob2-camera-qty" min="0" value="0" oninput="updateAzSpecialField('camera', this.value)">
+          </div>
+          <div class="special-card">
+            <h4>3) Дрели</h4>
+            <label style="font-size:12px; color:#475569;">Порядковые номера:</label>
+            <input type="text" id="ob2-drills-serials" placeholder="Напр: 1, 2, 5" oninput="updateAzSpecialField('drills', this.value)">
+          </div>
+          <div class="special-card">
+            <h4>4) Емкость аспирационная</h4>
+            <label style="font-size:12px; color:#475569;">Количество емкостей:</label>
+            <input type="number" id="ob2-aspir-qty" min="0" value="0" oninput="updateAzSpecialField('aspiration', this.value)">
+          </div>
+        </div>
+      </div>
+
+      <div class="subtabs">
+        <button class="subtab-btn active" data-sub="nho_to">НХО / ТО1 / ТО2</button>
+        <button class="subtab-btn" data-sub="oo">ОО1 / ОО2</button>
+      </div>
+
+      <div class="subtab-content active" id="sub-nho_to">
+        <p class="hint">Объединенный список наборов: НХО, ТО1, ТО2</p>
+        <div class="table-responsive">
+          <table class="sets-table">
+            <thead>
+              <tr><th>Название набора</th><th width="30%">Порядковые номера</th><th width="30%">Количество</th></tr>
+            </thead>
+            <tbody id="nho_to-sets-table-body"></tbody>
+          </table>
+        </div>
+        <div class="add-panel">
+          <input type="text" id="nho_to-imn-name" placeholder="Название ИМН">
+          <input type="number" id="nho_to-imn-qty" value="1" min="1">
+          <button onclick="addAzIMN('nho_to')">Добавить ИМН</button>
+        </div>
+        <h3>Выбранные наборы (НХО / ТО1 / ТО2):</h3>
+        <div id="nho_to-sets-list" class="list"></div>
+        <h3>Дополнительные ИМН:</h3>
+        <div id="nho_to-imn-list" class="list"></div>
+      </div>
+
+      <div class="subtab-content" id="sub-oo">
+        <p class="hint">Объединенный список наборов: ОО1, ОО2</p>
+        <div class="table-responsive">
+          <table class="sets-table">
+            <thead>
+              <tr><th>Название набора</th><th width="30%">Порядковые номера</th><th width="30%">Количество</th></tr>
+            </thead>
+            <tbody id="oo-sets-table-body"></tbody>
+          </table>
+        </div>
+        <div class="add-panel">
+          <input type="text" id="oo-imn-name" placeholder="Название ИМН">
+          <input type="number" id="oo-imn-qty" value="1" min="1">
+          <button onclick="addAzIMN('oo')">Добавить ИМН</button>
+        </div>
+        <h3>Выбранные наборы (ОО1 / ОО2):</h3>
+        <div id="oo-sets-list" class="list"></div>
+        <h3>Дополнительные ИМН:</h3>
+        <div id="oo-imn-list" class="list"></div>
+      </div>
+
+      <div class="summary-box">
+        <h2>Сводный Итог ОБ2</h2>
+        <div id="ob2-summary-totals"></div>
+        <div class="summary-total" id="ob2-summary-total"></div>
+      </div>
+    </div>
+
+    <!-- Отделения -->
+    <div class="subtab-content" id="sub-dept">
+      <div class="special-section">
+        <h2>Инструменты по отделениям</h2>
+        <div class="add-panel" style="margin-bottom:0;">
+          <input type="text" id="dept-current-name" placeholder="Название отделения" style="width:200px;" oninput="saveDeptName(this.value)">
+          <input type="text" id="dept-tool-name" placeholder="Название инструмента">
+          <input type="number" id="dept-tool-qty" value="1" min="1">
+          <button onclick="addDeptTool()">Добавить</button>
+        </div>
+      </div>
+      <h3>Добавленные инструменты:</h3>
+      <div id="dept-tools-list" class="list"></div>
+      <div class="summary-box ob1-theme">
+        <h2>Итог по отделениям</h2>
+        <div id="dept-summary-totals"></div>
+        <div class="summary-total" id="dept-summary-total"></div>
+      </div>
+    </div>
+
+    <div class="global-summary-box">
+      <h2>📊 Сводный итог по всем категориям</h2>
+      <div class="table-responsive">
+        <table class="global-summary-table">
+          <thead>
+            <tr><th>Пункт / Категория</th><th width="30%">Кол-во обработанных (шт.)</th><th width="30%">Кол-во проверенных (шт.)</th></tr>
+          </thead>
+          <tbody id="global-summary-tbody"></tbody>
+          <tfoot id="global-summary-tfoot"></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== МОДАЛЬНОЕ ОКНО ПЕЧАТИ АЗОПИРАМА ==================== -->
+<div class="modal-overlay" id="print-modal">
+  <div class="modal-container">
+    <div class="modal-header no-print">
+      <h2>Предварительный просмотр журнала контроля</h2>
+      <div>
+        <button class="btn-print" onclick="executeAzPrint()">🖨️ Отправить на печать</button>
+        <button class="btn-clear" onclick="closeAzPrintModal()">✕ Закрыть</button>
+      </div>
+    </div>
+    <div class="modal-controls no-print">
+      <div>
+        <label>Отделение для печати:</label>
+        <select id="print-dept-select" onchange="generateAzPrintJournal()">
+          <option value="ob2">ОБ2 (Спец. порядок)</option>
+          <option value="ob1">ОБ1</option>
+          <option value="dept">Отделения</option>
+        </select>
+      </div>
+      <div>
+        <label>Способ обработки:</label>
+        <input type="text" id="print-method" value="Механизированный / Ручной" oninput="updateAzPrintHeader()">
+      </div>
+      <div>
+        <label>Применяемое средство:</label>
+        <input type="text" id="print-agent" value="Азопирам" oninput="updateAzPrintHeader()">
+      </div>
+      <div>
+        <label>Ф.И.О. проводившего:</label>
+        <input type="text" id="print-worker" placeholder="Ф.И.О. медсестры" oninput="updateAzPrintHeader()">
+      </div>
+      <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #cbd5e1;">
+        <input type="checkbox" id="hide-browser-headers" checked style="width: 18px; height: 18px; cursor: pointer;">
+        <label for="hide-browser-headers" style="cursor: pointer; margin: 0; font-size: 13px; font-weight: 600; color: #1e3a8a;">Скрыть системные колонтитулы браузера</label>
+      </div>
+    </div>
+    <p class="no-print" style="font-size: 12px; color: #64748b; margin-bottom: 10px;">💡 <i>Вы можете редактировать любые ячейки таблицы непосредственно на экране перед печатью.</i></p>
+    <div class="print-page">
+      <table class="journal-table" id="journal-table-to-print">
+        <thead>
+          <tr>
+            <th rowspan="2" width="10%">Дата</th><th rowspan="2" width="10%">Способ обработки</th><th rowspan="2" width="18%">Применяемое средство</th>
+            <th colspan="5">Результаты выборочного химического контроля обработанных изделий</th>
+            <th rowspan="2" width="14%">Ф.И.О. проводившего обработку</th>
+          </tr>
+          <tr>
+            <th width="22%">Наименование изделия</th><th width="8%">кол-во обработанных</th><th width="8%">кол-во проверенных</th><th width="8%">из них загрязнения:<br>кровью</th><th width="10%">из них загрязнения:<br>моющими средствами</th>
+          </tr>
+          <tr><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th></tr>
+        </thead>
+        <tbody id="journal-table-body-az"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== МОДАЛЬНОЕ ОКНО ПЕЧАТИ МОЙКИ ==================== -->
+<div class="modal-overlay" id="wash-print-modal">
+  <div class="modal-container">
+    <div class="modal-header no-print">
+      <h2>Печать журнала мойки</h2>
+      <div>
+        <button class="btn-print" onclick="executeWashPrint()">🖨️ Отправить на печать</button>
+        <button class="btn-clear" onclick="document.getElementById('wash-print-modal').classList.remove('active')">✕ Закрыть</button>
+      </div>
+    </div>
+    <div class="print-page">
+      <table class="journal-table" id="wash-print-table">
+        <thead>
+          <tr>
+            <th>Дата, время</th><th>Отделение</th><th>Фамилия И.О.<br>медсестры</th>
+            <th>Дата, время</th><th>Отделение</th><th>Фамилия И.О.<br>медсестры</th>
+          </tr>
+          <tr><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== МОДАЛЬНОЕ ОКНО ПЕЧАТИ АВТОКЛАВОВ (КАК НА ФОТО) ==================== -->
+<div class="modal-overlay" id="autoclave-print-modal">
+  <div class="modal-container">
+    <div class="modal-header no-print">
+      <h2>Печать журнала автоклавов</h2>
+      <div>
+        <button class="btn-print" onclick="executeAutoclavePrint()">🖨️ Отправить на печать</button>
+        <button class="btn-clear" onclick="document.getElementById('autoclave-print-modal').classList.remove('active')">✕ Закрыть</button>
+      </div>
+    </div>
+    <div class="print-page">
+      <table class="journal-table autoclave-print-table" id="autoclave-print-table">
+        <thead>
+          <tr>
+            <th rowspan="2">Дата</th>
+            <th rowspan="2">Марка,<br>№ сте-<br>рили-<br>затора</th>
+            <th colspan="2">Стерилизуемые изделия</th>
+            <th rowspan="2">Упаковка</th>
+            <th colspan="2">Время стерилизации, мин.</th>
+            <th colspan="2">Режим</th>
+            <th colspan="3">Тест-контроль</th>
+            <th rowspan="2">Подпись</th>
+          </tr>
+          <tr>
+            <th>наименование</th>
+            <th>кол-во</th>
+            <th>начало</th>
+            <th>конец</th>
+            <th>давление</th>
+            <th>температура</th>
+            <th>биологи-<br>ческий</th>
+            <th>терми-<br>ческий</th>
+            <th>химический</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ДАННЫЕ И ЛОГИКА ЖУРНАЛА МОЙКИ И АВТОКЛАВОВ
+   ============================================================ */
+const G1_ITEMS = [
+  { label: 'ОБ1 № 1: Набор для лапаротомии' }, { label: 'ОБ1 № 2: Набор д/лапароскопии (инструмент)', hint: '1–4' },
+  { label: 'ОБ1 № 3: Набор д/ лапароскопии (СК)' }, { label: 'ОБ1 № 4: Набор дополнительный для лапароскопии (плазма)' },
+  { label: 'ОБ1 № 5: Набор холециститный' }, { label: 'ОБ1 № 6: Набор ЖКТ' }, { label: 'ОБ1 № 7: Набор для аутопластики' },
+  { label: 'ОБ1 № 8: Набор для ампутации' }, { label: 'ОБ1 № 9: Набор для ампутации' },
+  { label: 'ОБ1 № 10: Набор ВХО', hint: '1–3' }, { label: 'ОБ1 № 11' }, { label: 'ОБ1 № 12', hint: '1–4' },
+  { label: 'ОБ1 № 13', hint: '1–4' }, { label: 'ОБ1 № 14' }, { label: 'ОБ1 № 15' }, { label: 'ОБ1 № 16', hint: '1–2' },
+  { label: 'ОБ1 № 17', hint: '1–3' }, { label: 'ОБ1 № 18', hint: '1–2' }, { label: 'ОБ1 № 19', hint: '1–3' },
+  { label: 'ОБ1 № 20' }, { label: 'ОБ1 № 21' }, { label: 'ОБ1 № 22' }, { label: 'ОБ1 № 23' }, { label: 'ОБ1 № 24', hint: '1–2' },
+  { label: 'Перфоратор' }, { label: 'Дерматом' }, { label: 'Лапароскоп' }
+];
+const G2_LABELS = [
+  'НХО Набор №1','НХО Набор №2','НХО Набор №3','НХО Набор №4','НХО Набор №5','НХО Набор №6','НХО Набор №7','НХО Набор №8','НХО Набор №9','НХО Набор №10','НХО Набор №11','НХО Набор №12','НХО Набор №13','НХО Набор №14','НХО Набор №15','НХО Набор №16','НХО Набор №17','НХО Набор №18','НХО Набор №19','НХО Индивидуальные ИМН НХО',
+  'То1 Набор №1','То1 Набор №2','ТО1 Набор №2-1','ТО1 Набор №2-2 СК1','ТО1 Набор №2-2 СК-2','ТО1 Набор №2-3','То1 Набор №2-4','То1 Набор №2-5 СК1','То1 Набор №2-5 СК-2','То1 Набор №2-5 СК-3','То1 Набор №2-6 СК1','То1 Набор №2-6 СК-2','То1 Набор №2-7 СК1','То1 Набор №2-7 СК-2','То1 Набор №2-8 СК1','То1 Набор №2-8 СК-2','То1 Набор №2-8 СК-3','Набор №2-9 СК-1','Набор №2-9 СК-2','Набор №2-9 СК-3','Набор №2-9 СК-4','Набор №2-9 СК-5','ТО1 Набор №3','То1 Набор №4','ТО1 Набор №5','То1 Набор №6','То1 Набор №7','То1 Набор №8','То1 Набор №9','То1 Набор №10','То1 Набор №11','То1 Набор №12','То1- Набор №13','ТО1 Набор №14','То1 Набор №15','ТО1 Индивидуальные ИМН ТО-1','ТО-2 Набор №1','ТО-2 Набор №2','ТО-2 Набор №3','ТО-2 Набор №4','ТО-2 Набор №5','ТО-2 Набор №6','ТО-2 Набор №7'
+].map(label => ({ label }));
+const G3_LABELS = [
+  'OO1 Набор №1','OO1 Набор №1-1 СК-1','OO1 Набор №1-1 СК-2','OO1 Набор №1-1 СК-3','OO1 Набор №1-1 СК-4','OO1 Набор №2','OO1 Набор № 2-1 СК-1','OO1 Набор № 2-1 СК-2','OO1 Набор № 2-1 СК-3','OO1 Набор № 2-1 СК-4','OO1 Набор № 2-1 СК-5','OO1 Набор № 3-1','OO1 Набор № 4','OO1 Набор № 5','OO1 Набор № 5/4','OO1 Набор № 5/5','OO1 Набор № 5/6','OO1 Набор № 6','OO1 Набор № 7','OO1 Набор № 8','OO1 Набор № 13','OO1 Набор № 14','OO1 Набор № 15','OO2 Набор № 3-2','OO2 Набор № 8-2','OO2 Набор № 9','OO2 Набор №10','OO2 Набор №10-1 СК-1','OO2 Набор №10-1 СК-2','OO2 Набор №10-1 СК-3','OO2 Набор №10-1 СК-4','OO2 Набор № 11','OO2 Набор № 12','OO2 Набор № 12-1 СК-1','OO2 Набор № 12-1 СК-5','OO2 Набор № 12-2'
+].map(label => ({ label }));
+
+const WASHES = [1, 2];
+const HOURS = 24;
+const SLOTS = 6;
+const GRID_HOURS = 48;
+
+let grid = null;
+let placements = [];
+let lastWashTimes = { dept: null, g1: null, g2: null, g3: null };
+let currentWashDisplayStart = 0;
+let currentWashDisplayEnd = 23;
+let generatedAutoclaves = [];
+let manualDeptAssignments = [];
+
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function hoursOptions() { let opts = ''; for (let h = 0; h < 24; h++) opts += `<option value="${h}">${String(h).padStart(2, '0')}:00</option>`; return opts; }
+
+function renderWashGroup(containerId, groupKey, items) {
+  const container = document.getElementById(containerId);
+  let html = '<table class="input-table"><thead><tr><th>Набор</th><th width="30%">Порядковые номера</th><th width="30%">Количество</th></tr></thead><tbody>';
+  items.forEach(item => {
+    const hint = item.hint ? `<span style="font-size:12px; color:#64748b; margin-left:4px;">(${escapeHtml(item.hint)})</span>` : '';
+    html += `<tr data-group="${groupKey}" data-label="${escapeHtml(item.label)}">`;
+    html += `<td>${escapeHtml(item.label)}${hint}</td>`;
+    html += `<td><input class="nums" type="text" placeholder="1, 7, 8" oninput="toggleWashInputs(this)"></td>`;
+    html += `<td><input class="qty" type="number" min="0" step="1" placeholder="Количество" oninput="toggleWashInputs(this)"></td>`;
+    html += `</tr>`;
+  });
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function toggleWashInputs(el) {
+  const row = el.closest('tr');
+  const numsInput = row.querySelector('.nums');
+  const qtyInput = row.querySelector('.qty');
+  if (el.classList.contains('nums')) {
+    if (el.value.trim() !== '') { qtyInput.disabled = true; qtyInput.value = ''; }
+    else { qtyInput.disabled = false; }
+  } else if (el.classList.contains('qty')) {
+    if (el.value.trim() !== '') { numsInput.disabled = true; numsInput.value = ''; }
+    else { numsInput.disabled = false; }
+  }
+  updateWashPreview();
+}
+
+function addPlasmaCustomRow() {
+  const div = document.createElement('div');
+  div.className = 'row-flex custom-plasma-row';
+  div.style.marginBottom = '6px';
+  div.innerHTML = `
+    <input type="text" class="cp-name" placeholder="Название инструмента" style="width:200px; padding:4px 8px; border:1px solid #cbd5e1; border-radius:4px;">
+    <input type="number" class="cp-qty" min="1" value="1" placeholder="Кол-во" style="width:80px; padding:4px 8px; border:1px solid #cbd5e1; border-radius:4px;">
+    <button type="button" class="btn-clear" onclick="this.parentElement.remove()" style="padding:2px 8px;">×</button>
+  `;
+  document.getElementById('plasma-custom-list').appendChild(div);
+}
+
+function clearWashData() {
+  if (!confirm('Очистить все данные журнала мойки?')) return;
+  document.querySelectorAll('tr[data-group] input').forEach(inp => {
+    inp.value = '';
+    inp.disabled = false;
+  });
+  document.getElementById('aspiration').value = 0;
+  document.getElementById('hasDepts').checked = false;
+  document.getElementById('deptSection').classList.add('hidden');
+  document.getElementById('deptList').innerHTML = '';
+  document.getElementById('wash-journal-output').innerHTML = '';
+  document.querySelector('input[name="plasma"][value="14"]').checked = true;
+  document.getElementById('probe-slots-g1').value = '';
+  document.getElementById('plasma-custom-list').innerHTML = '';
+  manualDeptAssignments = [];
+  initWashGrid();
+  updateWashPreview();
+}
+
+function clearAutoclaveData() {
+  if (!confirm('Очистить журнал автоклавов и настройки?')) return;
+  document.getElementById('autoclave-journal').innerHTML = '';
+  document.getElementById('autoclave-journal').classList.add('hidden');
+  document.getElementById('autoclave-setup-content').innerHTML = '';
+  document.getElementById('autoclave-setup').classList.add('hidden');
+  manualDeptAssignments = [];
+  generatedAutoclaves = [];
+}
+
+function collectWashGroup(groupKey) {
+  const entries = [];
+  document.querySelectorAll(`tr[data-group="${groupKey}"]`).forEach(tr => {
+    const label = tr.dataset.label;
+    const numsStr = tr.querySelector('.nums').value.trim();
+    const sumVal = parseInt(tr.querySelector('.qty').value, 10);
+    const tokens = numsStr ? numsStr.split(/[,;\s]+/).filter(Boolean) : [];
+    const sum = (!isNaN(sumVal) && sumVal > 0) ? sumVal : 0;
+    for (let i = 0; i < tokens.length; i += 6) {
+      const chunk = tokens.slice(i, i + 6);
+      entries.push({ label, detail: chunk.join(', '), qty: chunk.length, group: groupKey });
+    }
+    let rem = sum;
+    while (rem > 0) {
+      const chunk = Math.min(6, rem);
+      entries.push({ label, detail: String(chunk), qty: chunk, group: groupKey });
+      rem -= chunk;
+    }
+  });
+  return entries;
+}
+
+function sumWashGroup(groupKey) { return collectWashGroup(groupKey).reduce((s, e) => s + e.qty, 0); }
+
+function updateWashPreview() {
+  const g1 = sumWashGroup('g1'), g2 = sumWashGroup('g2'), g3 = sumWashGroup('g3');
+  const asp = Math.max(0, parseInt(document.getElementById('aspiration').value, 10) || 0);
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set('badge-g1', g1); set('badge-g2', g2); set('badge-g3', g3);
+  set('preview-g1', g1); set('preview-g2', g2); set('preview-g3', g3);
+  set('preview-total', g1 + g2 + g3); set('preview-asp', asp);
+}
+
+function initWashGrid() {
+  grid = { 1: [], 2: [] };
+  for (const w of WASHES) {
+    grid[w] = [];
+    for (let h = 0; h < GRID_HOURS; h++) grid[w][h] = new Array(SLOTS).fill(null);
+  }
+  placements = [];
+}
+
+function maxContiguousFree(w, h) {
+  let max = 0, cur = 0;
+  for (const v of grid[w][h]) { if (v === null) { cur++; if (cur > max) max = cur; } else cur = 0; }
+  return max;
+}
+
+function placeWashEntry(w, h, entry) {
+  const slots = grid[w][h];
+  for (let start = 0; start <= SLOTS - entry.qty; start++) {
+    let ok = true;
+    for (let i = 0; i < entry.qty; i++) if (slots[start + i] !== null) { ok = false; break; }
+    if (ok) {
+      for (let i = 0; i < entry.qty; i++) slots[start + i] = { type: 'item', label: entry.label, detail: entry.detail, group: entry.group, qty: entry.qty, part: i };
+      placements.push({ wash: w, hour: h, label: entry.label, detail: entry.detail, qty: entry.qty, group: entry.group });
+      return true;
+    }
+  }
+  return false;
+}
+
+function blockWashSlots(w, h, count, label) {
+  const slots = grid[w][h];
+  const isProbe = /после пробы/i.test(label);
+  const isDept = /^Отделение:/i.test(label);
+  let placed = 0;
+  for (let s = 0; s < SLOTS && placed < count; s++) {
+    if (slots[s] === null) { slots[s] = { type: 'block', label, style: isProbe ? 'probe' : (isDept ? 'dept' : 'block') }; placed++; }
+  }
+  return placed;
+}
+
+function splitWashEntry(entry, take) {
+  const total = entry.qty, detail = entry.detail || '';
+  const parts = detail.split(',').map(s => s.trim()).filter(Boolean);
+  let headDetail, tailDetail;
+  if (parts.length === total) { headDetail = parts.slice(0, take).join(', '); tailDetail = parts.slice(take).join(', '); } 
+  else { headDetail = String(take); tailDetail = String(total - take); }
+  return { head: { label: entry.label, detail: headDetail, qty: take, group: entry.group }, tail: { label: entry.label, detail: tailDetail, qty: total - take, group: entry.group } };
+}
+
+function placeWashAspiration(count) {
+  let remaining = count;
+  for (let h = 18; h < HOURS && remaining > 0; h++) {
+    for (const w of WASHES) {
+      if (remaining <= 0) break;
+      const maxFree = maxContiguousFree(w, h);
+      if (maxFree === 0) continue;
+      const take = Math.min(6, maxFree, remaining);
+      placeWashEntry(w, h, { label: 'Аспирационная емкость', detail: String(take), qty: take, group: 'asp' });
+      remaining -= take;
+    }
+  }
+}
+
+function scheduleWashGroup1(entries) {
+  const queue = entries.slice();
+  let lastHour = null;
+  for (let h = 17; h < HOURS && queue.length; h++) {
+    let placedThisHour = 0;
+    let changed = true;
+    while (changed && queue.length) {
+      changed = false;
+      for (const w of WASHES) {
+        if (!queue.length || placedThisHour >= 12) break;
+        const e = queue[0], free = maxContiguousFree(w, h);
+        if (free === 0) continue;
+        const take = Math.min(e.qty, free, 12 - placedThisHour);
+        if (take <= 0) continue;
+        if (take === e.qty) { placeWashEntry(w, h, e); queue.shift(); } 
+        else { const { head, tail } = splitWashEntry(e, take); placeWashEntry(w, h, head); queue[0] = tail; }
+        placedThisHour += take; lastHour = h; changed = true;
+      }
+    }
+  }
+  return lastHour;
+}
+
+function scheduleWashGroup23(entries, startHour) {
+  const queue = entries.slice();
+  let lastHour = null;
+  for (let h = startHour; h < HOURS && queue.length; h++) {
+    let changed = true;
+    while (changed && queue.length) {
+      changed = false;
+      for (const w of WASHES) {
+        if (!queue.length) break;
+        const e = queue[0], free = maxContiguousFree(w, h);
+        if (free === 0) continue;
+        const take = Math.min(e.qty, free);
+        if (take <= 0) continue;
+        if (take === e.qty) { placeWashEntry(w, h, e); queue.shift(); } 
+        else { const { head, tail } = splitWashEntry(e, take); placeWashEntry(w, h, head); queue[0] = tail; }
+        lastHour = h; changed = true;
+      }
+    }
+  }
+  return lastHour;
+}
+
+function buildWash() {
+  const plasmaVal = document.querySelector('input[name="plasma"]:checked').value;
+  const plasmaHour = plasmaVal === 'none' ? null : parseInt(plasmaVal, 10);
+  const aspirationCount = Math.max(0, parseInt(document.getElementById('aspiration').value, 10) || 0);
+  const hasDepts = document.getElementById('hasDepts').checked;
+  let g1ProbeSlots = parseInt(document.getElementById('probe-slots-g1').value, 10);
+  if (isNaN(g1ProbeSlots) || g1ProbeSlots < 1) g1ProbeSlots = 2;
+  g1ProbeSlots = Math.min(6, g1ProbeSlots);
+
+  const departments = [];
+  if (hasDepts) {
+    document.querySelectorAll('.dept-row').forEach(row => {
+      const name = row.querySelector('.dept-name').value.trim() || 'Отделение';
+      const hour = parseInt(row.querySelector('.dept-hour').value, 10);
+      const wash = parseInt(row.querySelector('.dept-wash').value, 10);
+      const quota = parseInt(row.querySelector('.dept-quota').value, 10);
+      const probeSlots = parseInt(row.querySelector('.dept-probe-slots').value, 10) || 1;
+      if (!isNaN(hour) && !isNaN(wash) && !isNaN(quota)) {
+        departments.push({ name, hour, wash, quota: Math.max(0, Math.min(6, quota)), probeSlots: Math.max(1, Math.min(6, probeSlots)) });
+      }
+    });
+  }
+
+  const entriesG1 = collectWashGroup('g1'), entriesG2 = collectWashGroup('g2'), entriesG3 = collectWashGroup('g3');
+  initWashGrid();
+  lastWashTimes = { dept: null, g1: null, g2: null, g3: null };
+
+  if (plasmaHour !== null) {
+    let plasmaLabel = 'Плазма';
+    let customTools = [];
+    document.querySelectorAll('.custom-plasma-row').forEach(row => {
+      const n = row.querySelector('.cp-name').value.trim();
+      const q = parseInt(row.querySelector('.cp-qty').value, 10) || 0;
+      if (n && q > 0) customTools.push(`${n} (${q})`);
+    });
+    if (customTools.length > 0) plasmaLabel += ': ' + customTools.join(', ');
+    blockWashSlots(1, plasmaHour, 6, plasmaLabel);
+    blockWashSlots(1, plasmaHour + 3, 1, 'Плазма (после пробы)');
+  }
+
+  departments.forEach(d => {
+    for (let s = 0; s < d.quota && s < SLOTS; s++) {
+      if (grid[d.wash][d.hour][s] === null) grid[d.wash][d.hour][s] = { type: 'block', label: `Отделение: ${d.name}`, style: 'dept' };
+    }
+    placements.push({ wash: d.wash, hour: d.hour, label: `Отделение: ${d.name}`, qty: d.quota, group: 'dept', detail: '' });
+    blockWashSlots(d.wash, d.hour + 3, d.probeSlots, `после пробы Отделение: ${d.name}`);
+  });
+
+  placeWashAspiration(aspirationCount);
+  const lastG1 = scheduleWashGroup1(entriesG1);
+  if (lastG1 !== null) {
+    blockWashSlots(1, lastG1 + 3, g1ProbeSlots, 'после пробы ОБ1'); blockWashSlots(2, lastG1 + 3, g1ProbeSlots, 'после пробы ОБ1');
+  }
+
+  const startG2 = plasmaHour !== null ? plasmaHour : 0;
+  const lastG2 = scheduleWashGroup23(entriesG2, startG2);
+  if (lastG2 !== null) {
+    blockWashSlots(1, lastG2 + 3, 6, 'после пробы ОБ2 ТО1, ТО2, НХО'); blockWashSlots(2, lastG2 + 3, 6, 'после пробы ОБ2 ТО1, ТО2, НХО');
+  }
+
+  const startG3 = lastG2 !== null ? lastG2 : startG2;
+  const lastG3 = scheduleWashGroup23(entriesG3, startG3);
+  if (lastG3 !== null) {
+    blockWashSlots(1, lastG3 + 3, 6, 'после пробы ОБ2 ОО1, ОО2'); blockWashSlots(2, lastG3 + 3, 6, 'после пробы ОБ2 ОО1, ОО2');
+  }
+
+  placements.forEach(p => {
+    if (p.group === 'dept') lastWashTimes.dept = Math.max(lastWashTimes.dept ?? -1, p.hour);
+    if (p.group === 'g1') lastWashTimes.g1 = Math.max(lastWashTimes.g1 ?? -1, p.hour);
+    if (p.group === 'g2') lastWashTimes.g2 = Math.max(lastWashTimes.g2 ?? -1, p.hour);
+    if (p.group === 'g3') lastWashTimes.g3 = Math.max(lastWashTimes.g3 ?? -1, p.hour);
+  });
+
+  let startDisplayHour = plasmaHour !== null ? plasmaHour : 24;
+  if (departments.length > 0) startDisplayHour = Math.min(startDisplayHour, Math.min(...departments.map(d => d.hour)));
+  if (startDisplayHour === 24) startDisplayHour = 0;
+  currentWashDisplayStart = startDisplayHour;
+
+  renderWashJournal();
+}
+
+function renderWashJournal() {
+  const container = document.getElementById('wash-journal-output');
+  let maxHour = 23;
+  for (let h = 0; h < GRID_HOURS; h++) { for (const w of WASHES) if (grid[w][h].some(slot => slot !== null)) maxHour = h; }
+  currentWashDisplayEnd = maxHour;
+
+  let html = '<h2>Журнал мойки</h2><div class="table-responsive"><table class="journal-table-main"><thead><tr><th>Время</th><th>Мойка 1</th><th>Мойка 2</th></tr></thead><tbody>';
+  for (let h = currentWashDisplayStart; h <= maxHour; h++) {
+    const timeStr = h >= 24 ? `${String(h-24).padStart(2, '0')}:00 <span style="color:red;font-size:10px;">(след. день)</span>` : `${String(h).padStart(2, '0')}:00`;
+    html += `<tr><th>${timeStr}</th>`;
+    for (const w of WASHES) {
+      html += '<td>';
+      for (let s = 0; s < SLOTS; s++) {
+        const c = grid[w][h][s];
+        if (c === null) html += '<div class="slot free">—</div>';
+        else if (c.type === 'block') html += `<div class="slot ${c.style || 'block'}">${escapeHtml(c.label)}</div>`;
+        else if (c.part === 0) html += `<div class="slot item">${escapeHtml(c.label)}${c.detail ? ` (${escapeHtml(c.detail)})` : ''}</div>`;
+        else html += '<div class="slot item" style="opacity:0.5; font-style:italic; padding-left:16px;">↳</div>';
+      }
+      html += '</td>';
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table></div>';
+  container.innerHTML = html;
+}
+
+function addWashDeptRow() {
+  const list = document.getElementById('deptList');
+  const row = document.createElement('div');
+  row.className = 'dept-row';
+  row.innerHTML = `
+    <input class="dept-name" placeholder="Название отделения" style="width:150px">
+    <label>Время: <select class="dept-hour">${hoursOptions()}</select></label>
+    <label>Мойка: <select class="dept-wash"><option value="1">1</option><option value="2">2</option></select></label>
+    <label>Кол-во: <input class="dept-quota" type="number" min="0" max="6" value="6" style="width:50px"></label>
+    <label title="Мест для 'после пробы'">После пробы: <input class="dept-probe-slots" type="number" min="1" max="6" value="1" style="width:50px"></label>
+    <button type="button" class="remove-dept btn-clear" style="padding:4px 8px;" onclick="this.parentElement.remove()">×</button>
+  `;
+  list.appendChild(row);
+}
+
+/* ============================================================
+   АВТОКЛАВЫ
+   ============================================================ */
+function getCalculatedAutoclaves() {
+  const autoclaves = [];
+  if (lastWashTimes.dept !== null) {
+    const isAuto = document.querySelector('input[name="ac-time-dept"][value="auto"]')?.checked ?? true;
+    let absoluteStartTime = lastWashTimes.dept + 5;
+    if (!isAuto) {
+      const manualEl = document.getElementById('ac-time-dept-manual');
+      if (manualEl) {
+        absoluteStartTime = parseInt(manualEl.value);
+        if (absoluteStartTime < lastWashTimes.dept) absoluteStartTime += 24;
+      }
+    }
+    const items = placements.filter(p => p.group === 'dept').flatMap(p => Array(p.qty).fill({ label: p.label, detail: p.detail }));
+    if (items.length > 0) {
+      const K = Math.ceil(items.length / 10), base = Math.floor(items.length / K), rem = items.length % K;
+      let offset = 0;
+      for (let i = 0; i < K; i++) {
+        const size = i < rem ? base + 1 : base;
+        autoclaves.push({ category: 'Отделения', absoluteStartTime, items: items.slice(offset, offset + size) });
+        offset += size;
+      }
+    }
+  }
+
+  ['g1', 'g2', 'g3'].forEach(key => {
+    if (lastWashTimes[key] === null) return;
+    const absoluteStartTime = lastWashTimes[key] + 5;
+    const isManual = document.querySelector(`input[name="ac-dist-${key}"][value="manual"]`)?.checked;
+    let sizes = [];
+    if (isManual) {
+      document.querySelectorAll(`#ac-manual-inputs-${key} input`).forEach(inp => { const val = parseInt(inp.value); if (val > 0) sizes.push(Math.min(13, val)); });
+    } else {
+      const totalItems = placements.filter(p => p.group === key).reduce((sum, p) => sum + p.qty, 0);
+      if (totalItems > 0) {
+        const K = Math.ceil(totalItems / 10), base = Math.floor(totalItems / K), rem = totalItems % K;
+        for (let i = 0; i < K; i++) sizes.push(i < rem ? base + 1 : base);
+      }
+    }
+    const allItems = placements.filter(p => p.group === key).flatMap(p => Array(p.qty).fill({ label: p.label, detail: p.detail }));
+    let offset = 0;
+    sizes.forEach(size => {
+      autoclaves.push({ category: key === 'g1' ? 'ОБ1 + инструменты' : (key === 'g2' ? 'ОБ2 ТО' : 'ОБ2 ОО'), absoluteStartTime, items: allItems.slice(offset, offset + size) });
+      offset += size;
+    });
+  });
+
+  const hourlyLimit = {};
+  autoclaves.sort((a, b) => a.absoluteStartTime - b.absoluteStartTime);
+  autoclaves.forEach(ac => {
+    let t = ac.absoluteStartTime;
+    while ((hourlyLimit[t] || 0) >= 2) t++;
+    ac.absoluteTime = t; ac.time = t % 24; ac.dayOffset = Math.floor(t / 24);
+    hourlyLimit[t] = (hourlyLimit[t] || 0) + 1;
+  });
+
+  return autoclaves;
+}
+
+function showAutoclaveSetup() {
+  const container = document.getElementById('autoclave-setup-content');
+  container.innerHTML = '';
+  document.getElementById('autoclave-setup').classList.remove('hidden');
+  document.getElementById('autoclave-journal').classList.add('hidden');
+
+  const cats = [ { key: 'dept', name: 'Отделения' }, { key: 'g1', name: 'ОБ1 + инструменты' }, { key: 'g2', name: 'ОБ2 ТО1, ТО2, НХО' }, { key: 'g3', name: 'ОБ2 ОО1, ОО2' } ];
+
+  cats.forEach(cat => {
+    const lastHour = lastWashTimes[cat.key];
+    if (lastHour === null) return;
+
+    const startTime = (lastHour + 5) % 24;
+    const totalItems = placements.filter(p => p.group === cat.key).reduce((sum, p) => sum + p.qty, 0);
+
+    let html = `<div style="border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:12px; background:#f8fafc;">`;
+    html += `<h3 style="margin-top:0;">${cat.name}</h3>`;
+    html += `<div class="hint">Последняя мойка: ${String(lastHour).padStart(2, '0')}:00. Рекомендуемое начало: ${String(startTime).padStart(2, '0')}:00. Всего позиций: <b>${totalItems}</b>.</div>`;
+
+    if (cat.key === 'dept') {
+      html += `<div class="row-flex" style="margin-top:10px;">
+        <label><input type="radio" name="ac-time-dept" value="auto" checked> Начать с ${String(startTime).padStart(2, '0')}:00</label>
+        <label><input type="radio" name="ac-time-dept" value="manual"> Ввести вручную: <input type="number" id="ac-time-dept-manual" min="0" max="23" value="${startTime}" style="width:60px; padding:4px;" disabled></label>
+      </div>`;
+    } else {
+      const autoCount = Math.ceil(totalItems / 10);
+      html += `<div class="row-flex" style="margin-top:10px;">
+        <label><input type="radio" name="ac-dist-${cat.key}" value="auto" checked> Автоматически (${autoCount} шт.)</label>
+        <label><input type="radio" name="ac-dist-${cat.key}" value="manual"> Самостоятельно</label>
+      </div>
+      <div id="ac-manual-${cat.key}" class="hidden" style="margin-top:8px;">
+        <div id="ac-manual-inputs-${cat.key}"></div>
+        <button type="button" class="btn-secondary" onclick="addAutoclaveManualInput('${cat.key}')">+ Добавить автоклав</button>
+      </div>`;
+    }
+    html += `</div>`;
+    container.innerHTML += html;
+  });
+
+  container.innerHTML += `
+    <div style="margin-top:20px; border-top:1px solid #cbd5e1; padding-top:16px;">
+      <h3>Добавление отделений в автоклавы</h3>
+      <div class="hint">Вы можете принудительно добавить отделение в конкретный автоклав любой категории.</div>
+      <button type="button" class="btn-secondary" onclick="addDeptAutoclaveUI()" style="margin-top:10px;">+ Добавить отделение в автоклав с...</button>
+      <div id="manual-dept-forms" style="margin-top:10px; margin-bottom:15px;"></div>
+      <div id="saved-dept-assignments"></div>
+    </div>
+  `;
+  renderSavedDeptAssignments();
+
+  document.querySelectorAll('input[name="ac-time-dept"]').forEach(r => r.addEventListener('change', e => document.getElementById('ac-time-dept-manual').disabled = (e.target.value !== 'manual')));
+  ['g1', 'g2', 'g3'].forEach(key => {
+    if (lastWashTimes[key] === null) return;
+    document.querySelectorAll(`input[name="ac-dist-${key}"]`).forEach(r => {
+      r.addEventListener('change', e => {
+        const manualDiv = document.getElementById(`ac-manual-${key}`);
+        if (e.target.value === 'manual') {
+          manualDiv.classList.remove('hidden');
+          const inputsDiv = document.getElementById(`ac-manual-inputs-${key}`);
+          if (inputsDiv.children.length === 0) {
+            const totalItems = placements.filter(p => p.group === key).reduce((sum, p) => sum + p.qty, 0);
+            const autoCount = Math.ceil(totalItems / 10);
+            const base = Math.floor(totalItems / autoCount), rem = totalItems % autoCount;
+            for (let i = 0; i < autoCount; i++) addAutoclaveManualInput(key, i < rem ? base + 1 : base);
+          }
+        } else manualDiv.classList.add('hidden');
+      });
+    });
+  });
+}
+
+function addDeptAutoclaveUI() {
+  const container = document.getElementById('manual-dept-forms');
+  const div = document.createElement('div');
+  div.className = 'manual-dept-row';
+  div.style = 'display:flex; gap:10px; align-items:center; margin-bottom:10px; background:#fff; padding:10px; border:1px solid #cbd5e1; border-radius:8px; flex-wrap:wrap;';
+  
+  div.innerHTML = `
+    <input type="text" class="md-dept-name" placeholder="Название отделения" style="padding:6px; border:1px solid #cbd5e1; border-radius:6px; width:150px;">
+    <select class="md-category" style="padding:6px; border:1px solid #cbd5e1; border-radius:6px;" onchange="updateAutoclaveDropdown(this)">
+      <option value="g1">ОБ1 + инструменты</option>
+      <option value="g2">ОБ2 ТО1, ТО2, НХО</option>
+      <option value="g3">ОБ2 ОО1, ОО2</option>
+    </select>
+    <select class="md-autoclave" style="padding:6px; border:1px solid #cbd5e1; border-radius:6px; width:250px;">
+      <option value="">Сначала выберите категорию</option>
+    </select>
+    <button type="button" class="btn-primary" style="padding:6px 12px;" onclick="saveManualDeptAssignment(this)">Добавить</button>
+    <button type="button" class="btn-clear" style="padding:6px 12px;" onclick="this.parentElement.remove()">×</button>
+  `;
+  container.appendChild(div);
+  
+  updateAutoclaveDropdown(div.querySelector('.md-category'));
+}
+
+function updateAutoclaveDropdown(selectEl) {
+  const row = selectEl.closest('.manual-dept-row');
+  const acSelect = row.querySelector('.md-autoclave');
+  const category = selectEl.value;
+  
+  const allAutoclaves = getCalculatedAutoclaves();
+  let catName = '';
+  if (category === 'g1') catName = 'ОБ1 + инструменты';
+  else if (category === 'g2') catName = 'ОБ2 ТО';
+  else if (category === 'g3') catName = 'ОБ2 ОО';
+  
+  const catAutoclaves = allAutoclaves.filter(ac => ac.category === catName);
+  
+  if (catAutoclaves.length === 0) {
+    acSelect.innerHTML = `<option value="">Нет автоклавов в этой категории</option>`;
+    return;
+  }
+
+  acSelect.innerHTML = catAutoclaves.map((ac, idx) => {
+    const timeStr = String(ac.time).padStart(2, '0') + ':00' + (ac.dayOffset > 0 ? ' (след. день)' : '');
+    const count = ac.items.length;
+    return `<option value="${idx}">Автоклав №${idx + 1} (Время: ${timeStr}, Наборов: ${count})</option>`;
+  }).join('');
+}
+
+function saveManualDeptAssignment(btn) {
+  const row = btn.closest('.manual-dept-row');
+  const deptName = row.querySelector('.md-dept-name').value.trim();
+  const category = row.querySelector('.md-category').value;
+  const acIndex = row.querySelector('.md-autoclave').value;
+
+  if (!deptName) return alert('Введите название отделения');
+  if (acIndex === '') return alert('Выберите автоклав');
+
+  manualDeptAssignments.push({
+    deptName,
+    category,
+    autoclaveIndex: parseInt(acIndex, 10)
+  });
+
+  row.remove();
+  renderSavedDeptAssignments();
+}
+
+function renderSavedDeptAssignments() {
+  const container = document.getElementById('saved-dept-assignments');
+  if (!container) return;
+  container.innerHTML = '';
+  if (manualDeptAssignments.length === 0) return;
+
+  container.innerHTML = `<div style="font-weight:600; margin-bottom:5px;">Сохраненные привязки:</div>`;
+  
+  manualDeptAssignments.forEach((assign, index) => {
+    let catName = '';
+    if (assign.category === 'g1') catName = 'ОБ1';
+    else if (assign.category === 'g2') catName = 'ОБ2 ТО';
+    else if (assign.category === 'g3') catName = 'ОБ2 ОО';
+
+    const div = document.createElement('div');
+    div.style = 'display:flex; justify-content:space-between; background:#f8fafc; padding:8px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:4px; font-size:13px;';
+    div.innerHTML = `<span><b>${assign.deptName}</b> → ${catName}, Автоклав №${assign.autoclaveIndex + 1}</span>`;
+    const btn = document.createElement('button');
+    btn.className = 'btn-clear';
+    btn.style = 'padding:2px 8px; font-size:11px;';
+    btn.textContent = '✕';
+    btn.onclick = () => {
+      manualDeptAssignments.splice(index, 1);
+      renderSavedDeptAssignments();
+    };
+    div.appendChild(btn);
+    container.appendChild(div);
+  });
+}
+
+function addAutoclaveManualInput(catKey, defaultVal = 10) {
+  const container = document.getElementById(`ac-manual-inputs-${catKey}`);
+  const div = document.createElement('div');
+  div.className = 'row-flex'; div.style.marginBottom = '6px';
+  div.innerHTML = `<span style="font-size:13px; width:100px;">Автоклав ${container.children.length + 1}:</span>
+    <input type="number" min="1" max="13" value="${defaultVal}" style="width:60px; padding:4px;">
+    <button type="button" class="btn-clear" onclick="this.parentElement.remove()" style="padding:2px 8px;">×</button>`;
+  container.appendChild(div);
+}
+
+function buildAutoclaves() {
+  const autoclaves = getCalculatedAutoclaves();
+
+  manualDeptAssignments.forEach(assign => {
+    let catName = '';
+    if (assign.category === 'g1') catName = 'ОБ1 + инструменты';
+    else if (assign.category === 'g2') catName = 'ОБ2 ТО';
+    else if (assign.category === 'g3') catName = 'ОБ2 ОО';
+
+    const catAutoclaves = autoclaves.filter(ac => ac.category === catName);
+    const target = catAutoclaves[assign.autoclaveIndex];
+    if (target) {
+      target.items.push({ label: `Отделение: ${assign.deptName}`, detail: '' });
+    }
+  });
+
+  let startAcDisplay = Infinity;
+  if (lastWashTimes.g1 !== null) startAcDisplay = Math.min(startAcDisplay, lastWashTimes.g1 + 5);
+  if (lastWashTimes.dept !== null) startAcDisplay = Math.min(startAcDisplay, lastWashTimes.dept + 5);
+  if (startAcDisplay === Infinity) startAcDisplay = 0;
+
+  const displayList = autoclaves.filter(ac => ac.absoluteTime >= startAcDisplay);
+  generatedAutoclaves = displayList;
+
+  let html = '<h2>Журнал автоклавов</h2><div class="table-responsive"><table class="journal-table-main"><thead><tr><th>Автоклав № 1</th><th>Содержимое</th><th>Автоклав № 2</th><th>Содержимое</th></tr></thead><tbody>';
+  for (let i = 0; i < displayList.length; i += 2) {
+    const ac1 = displayList[i], ac2 = displayList[i+1];
+    const t1 = String(ac1.time).padStart(2, '0') + ':00' + (ac1.dayOffset > 0 ? ' (след. день)' : '');
+    const t2 = ac2 ? String(ac2.time).padStart(2, '0') + ':00' + (ac2.dayOffset > 0 ? ' (след. день)' : '') : '';
+    const format = (ac) => { if(!ac) return ''; const g = {}; ac.items.forEach(it => { if(!g[it.label]) g[it.label]=[]; if(it.detail) g[it.label].push(it.detail); }); return Object.keys(g).map(l => `<b>${l}</b> ${g[l].length ? '('+g[l].join(', ')+')' : ''}`).join('; '); };
+    html += `<tr><td>${t1}</td><td>${format(ac1)}</td><td>${t2}</td><td>${format(ac2)}</td></tr>`;
+  }
+  html += '</tbody></table></div>';
+  
+  document.getElementById('autoclave-journal').innerHTML = html;
+  document.getElementById('autoclave-journal').classList.remove('hidden');
+  document.getElementById('autoclave-setup').classList.add('hidden');
+}
+
+/* ============================================================
+   ПЕЧАТЬ МОЙКИ И АВТОКЛАВОВ
+   ============================================================ */
+function openWashPrintModal() {
+  const tbody = document.getElementById('wash-print-table').querySelector('tbody');
+  tbody.innerHTML = '';
+  for (let h = currentWashDisplayStart; h <= currentWashDisplayEnd; h++) {
+    const tr = document.createElement('tr');
+    let val1 = [], val2 = [];
+    grid[1][h].forEach(slot => { if(!slot) return; if(slot.type === 'block') { if(!val1.includes(`[${slot.label}]`)) val1.push(`[${slot.label}]`); } else if(slot.part === 0) val1.push(`${slot.label}${slot.detail ? ` (${slot.detail})` : ''}`); });
+    grid[2][h].forEach(slot => { if(!slot) return; if(slot.type === 'block') { if(!val2.includes(`[${slot.label}]`)) val2.push(`[${slot.label}]`); } else if(slot.part === 0) val2.push(`${slot.label}${slot.detail ? ` (${slot.detail})` : ''}`); });
+    const timeStr = h >= 24 ? `${String(h-24).padStart(2, '0')}:00 (след. день)` : `${String(h).padStart(2, '0')}:00`;
+    tr.innerHTML = `<td contenteditable="true">${timeStr}</td><td contenteditable="true">${val1.join(', ')}</td><td contenteditable="true"></td><td contenteditable="true">${timeStr}</td><td contenteditable="true">${val2.join(', ')}</td><td contenteditable="true"></td>`;
+    tbody.appendChild(tr);
+  }
+  document.getElementById('wash-print-modal').classList.add('active');
+}
+
+function openAutoclavePrintModal() {
+  const tbody = document.getElementById('autoclave-print-table').querySelector('tbody');
+  tbody.innerHTML = '';
+  
+  const list = generatedAutoclaves || [];
+  
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding: 20px;">Нет данных для печати. Сначала сформируйте журнал автоклавов.</td></tr>`;
+  } else {
+    list.forEach((ac, index) => {
+       ac.items.forEach((item, itemIdx) => {
+          const tr = document.createElement('tr');
+          
+          let dateHtml = itemIdx === 0 ? `<td contenteditable="true" rowspan="${ac.items.length}"></td>` : '';
+          let markHtml = itemIdx === 0 ? `<td contenteditable="true" rowspan="${ac.items.length}">№ ${index + 1}<br>(${String(ac.time).padStart(2, '0')}:00)</td>` : '';
+          
+          let name = `${item.label} ${item.detail ? '('+item.detail+')' : ''}`;
+          
+          tr.innerHTML = `
+            ${dateHtml}
+            ${markHtml}
+            <td contenteditable="true" style="text-align:left;">${name}</td>
+            <td contenteditable="true">1</td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+          `;
+          tbody.appendChild(tr);
+       });
+    });
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>`;
+    tbody.appendChild(tr);
+  }
+
+  document.getElementById('autoclave-print-modal').classList.add('active');
+}
+
+function executeWashPrint() { window.print(); }
+function executeAutoclavePrint() { window.print(); }
+
+/* ============================================================
+   ЖУРНАЛ АЗОПИРАМА (ЛОГИКА)
+   ============================================================ */
+const SETS = {
+  "ОБ1 Набор 1": { "Зажим":35, "Цапка":4, "Ручка":3, "Корнцанг":2, "Ножницы":4, "Крючки":6, "Иглодержатель":4, "Брюшные зеркала":3, "Пинцет":9, "Игла":1, "Емкость":2 },
+  "ОБ1 Набор 2": { "Корнцанг":2, "Ручка":2, "Цапка":5, "Зажим":10, "Ножницы":2, "Крючки":4, "Иглодержатель":1, "Пинцет":4, "Емкость":2 },
+  "ОБ1 Набор 3": { "Троакар":5, "Гвоздь":1, "Переходник":1, "Отсос":1, "Электрод":2, "Зажим":3, "Диссектор":1, "Ножницы":1, "Игла":1 },
+  "ОБ1 Набор 4": { "Прокладки":10, "Кассета":2 },
+  "ОБ1 Набор 5": { "Иглодержатель":1, "Ножницы":1, "Зажим":4, "Диссектор":2, "Ловушки":4, "Крючок":3, "Зонд":2 },
+  "ОБ1 Набор 6": { "Зажим":6, "Жом":13, "Диссектор":3 },
+  "ОБ1 Набор 7": { "Корнцанг":2, "Зажим":3, "Пинцеты":2, "Ножницы":3, "Ручка":2, "Иглодержатель":1, "Емкость":2 },
+  "ОБ1 Набор 8": { "Зажим":20, "Ручка":2, "Корнцанг":2, "Цапка":4, "Ножницы":3, "Распатор":2, "Пинцет":4, "Крючки":4, "Кусачки":2, "Пила":1, "Рашпиль":1, "Ложка":2, "Ретрактор":1, "Иглодержатель":2 },
+  "ОБ1 Набор 9": { "Ретрактор":1, "Нож":1, "Рашпиль":1, "Пила":1, "Полотно":2, "Распатор":1 },
+  "ОБ1 Набор 10": { "Корнцанг":2, "Зажим":27, "Пинцет":6, "Ножницы":4, "Ручка":3, "Иглодержатель":2, "Ложка":4, "Досылатель":1, "Распатор":2, "Элеватор":3, "Шило":2, "Долото":6, "Молоток":1, "Кусачки":3, "Костодержатель":1, "Рашпиль":1, "Крючки":14, "Зонд":1, "Игла":2, "Емкость":3 },
+  "ОБ1 Набор 11": { "Зажим":13, "Корнцанг":2, "Цапка":2, "Кусачки":2, "Распатор":2, "Емкость":2, "Иглодержатель":2, "Ножницы":3, "Рашпиль":1, "Ручка":2, "Ложка":6, "Пинцет":2, "Крючки":3 },
+  "ОБ1 Набор 12": { "Зажим":7, "Ножницы":2, "Цапка":2, "Иглодержатель":1, "Крючки":2, "Ручка":2, "Пинцет":2, "Корнцанг":1, "Емкость":2 },
+  "ОБ1 Набор 13": { "Зажим":5, "Пинцет":2, "Крючки":2, "Расширитель":1, "Ручка":1, "Емкость":1, "Иглодержатель":1, "Ножницы":1 },
+  "ОБ1 Набор 14": { "Зажим":17, "Пинцет":4, "Ножницы":5, "Ручка":3, "Иглодержатель":2, "Крючки":5, "Корнцанг":2, "Микроножницы":3, "Микропинцет":2, "Цапка":3, "Зонд":1, "Ложка":3, "Микрокрючок":3, "Распатор":2, "Микроэлеватор":1 },
+  "ОБ1 Набор 15": { "Распатор":2, "Крючки":7, "Ложка":5, "Рашпиль":1, "Долото":3, "Кусачки":2 },
+  "ОБ1 Набор 16": { "Емкость":2, "Крючки":2, "Ножницы":2, "Цапка":2, "Пинцет":2, "Ручка":1, "Зажим":6, "Корнцанг":1, "Иглодержатель":1 },
+  "ОБ1 Набор 17": { "Корнцанг":2, "Зажим":35, "Иглодержатель":2, "Ножницы":4, "Пинцет":7, "Коловорот":1, "Копья":7, "Элеватор":2, "Шпатель":10, "Ложка":2, "Цапка":3, "Распатор":2, "Кусачки":3, "Крючки":2, "Ручка":3, "Емкость":3 },
+  "ОБ1 Набор 18": { "Корнцанг":2, "Зажим":22, "Иглодержатель":2, "Ножницы":3, "Цапка":3, "Пинцет":4, "Крючки":12, "Распатор":2, "Элеватор":2, "Ложка":2, "Ручка":2, "Емкость":2 },
+  "ОБ1 Набор 19": { "Зажим":2, "Ножницы":1, "Пинцет":1, "Ручка":1, "Емкость":1, "Иглодержатель":1 },
+  "ОБ1 Набор 20": { "Нож":6, "Зонд":4, "Элеватор":1, "Диссектор":1, "Ножницы":1, "Зажим":2, "Крючки":5, "Емкость":1 },
+  "ОБ1 Набор 21": { "Зажим":20, "Иглодержатель":1, "Диссектор":3, "Микроножницы":4, "Пинцет":8, "Ножницы":5, "Микроиглодержатель":1, "Клемма":14 },
+  "ОБ1 Набор 22": { "Кусачки":2, "Распатор":3, "Диссектор":2, "Зажим":7, "Ранорасширитель":1, "Ложка":3 },
+  "ОБ1 Набор 23": { "Стойка":2, "Кронштейн":2, "Крюк":4, "Винт":2, "Гайка":2 },
+  "ОБ1 Набор 24": { "Корнцанг":2, "Зажим":20, "Иглодержатель":2, "Ножницы":3, "Пинцет":5, "Зонд":1, "Шило":1, "Крючки":14, "Элеватор":2, "Распатор":2, "Ложка":2, "Цапка":3, "Кусачки":1, "Долото":3, "Костодержатель":3, "Рашпиль":1, "Ручка":2, "Игла":2, "Емкость":2 },
+  "НХО Набор №1": { "Корнцанг":3, "Иглодержатель":3, "Зажим":22, "Цапка":8, "Ножницы":6, "Ручка":4, "Крючки":4, "Долото":3, "Распатор":6, "Шпатель":1, "Конхотом":2, "Молоток":1, "Ранорасширитель":3, "Пинцет":8, "Кусачки":8, "Микрокрючок":2, "Ложка":6, "Подъемник":1, "Емкость д/растворов":4 },
+  "НХО Набор №2": { "Корнцанг":2, "Иглодержатель":4, "Зажим":42, "Цапка":8, "Ножницы":6, "Ручка":2, "Крючки":2, "Элеватор":2, "Распатор":2, "Ложка":1, "Шпатель":7, "Проводник":1, "Пинцет":9, "Кусачки":2, "Коловорот":1, "Фрезы":5, "Лоток":3, "Емкость":6 },
+  "НХО Набор №3": { "Диссектор":5, "Микроножницы":2, "Микропинцет":2, "Ранорасширитель":3, "Фиксатор":3, "Ретрактор":4, "Проводник":2 },
+  "НХО Набор №4": { "Корнцанг":1, "Иглодержатель":2, "Зажим":35, "Цапка":3, "Ножницы":4, "Ручка":3, "Крючки":2, "Элеватор":2, "Распатор":2, "Ложка":1, "Шпатель":7, "Проводник":5, "Пинцет":6, "Кусачки":3, "Коловорот":1, "Фрезы":5, "Емкость":6 },
+  "НХО Набор №5": { "Фиксатор":1, "Элеватор":7, "Фрезы":9, "Ранорасширитель":28, "Резцы":2, "Досылатель":3, "Штифтодержатель":1, "Распатор":1, "Долото":3, "Игла":6, "Держатель":1, "Иглодержатель":2, "Пинцет":2, "Ножницы":1, "Кусачки":4, "Конхотом":1, "Зажим":7, "Зеркало брюшное":4 },
+  "НХО Набор №6": { "Корнцанг":2, "Зажим":20, "Цапка":6, "Ручка":3, "Ножницы":5, "Иглодержатель":3, "Пинцет":7, "Резак":2, "Досылатель":1, "Долото":3, "Крючки":2, "Кусачки":1, "Распатор":4, "Молоток":1, "Конхотом":2, "Шпатель":1, "Микрокрючок":1, "Ложка":3, "Ранорасширитель":9, "Фиксатор":8, "Ретрактор":7, "Элеватор":6, "Емкость":4 },
+  "НХО Набор №7": { "Корнцанг":2, "Зажим":20, "Цапка":4, "Ручка":2, "Пинцет":7, "Ножницы":10, "Иглодержатель":2, "Диссектор":3, "Проводник":1, "Лоток":1, "Емкость":4 },
+  "НХО Набор №8": { "Кабель":1, "Насадка":5 },
+  "НХО Набор №9": { "Шуп":2, "Проводник":2, "Метчик":3, "Зажим":2, "Изгибатель":1, "Захват":1, "Ключ":1, "Отвертка":2, "Щипцы":1, "Стяжка":1, "Шаблон":1, "Кронциркуль":1, "Препаратор":3, "Шило":1 },
+  "НХО Набор №10": { "Пробник":7, "Аппликатор":1, "Ключ":1, "Измеритель":5 },
+  "НХО Набор №11": { "Корнцанг":2, "Зажим":26, "Цапка":5, "Ножницы":6, "Ручка":4, "Ранорасширитель":2, "Распатор":2, "Ложка":1, "Шпатель":5, "Проводник":3, "Пинцет":8, "Кусачки":1, "Коловорот":1, "Фрезы":5, "Емкость":4, "Крючки":4 },
+  "НХО Набор №12": { "Кусочки":1, "Краниофиксатор":1 },
+  "НХО Набор №13": { "Ранорасширитель":5, "Насадки":23, "Ретрактор":1 },
+  "НХО Набор №14": { "Трекер":3 },
+  "НХО Набор №15": { "Емкость":3, "Корнцанг":2, "Зажим":1, "Пинцет":2, "Лоток":1 },
+  "НХО Набор №16": { "Кюретка":9, "Конхотом":4, "Микроножницы":4, "Ручка":2, "Кусачка":2, "Проводник":9, "Цапка":6, "Иглодержатель":1, "Корнцанг":2, "Зажим":6, "Ножницы":2, "Носорасширитель":2, "Емкость":4, "Пинцет":2 },
+  "НХО Набор №17": { "Гильза":1, "Спицы":1, "Молоток":1, "Тубус":2, "Диссектор":3, "Вставка":1, "Крючок":1, "Щипцы":4, "Зажим":1, "Керрисон":3, "Шахта":1, "Стилет":1, "Конхотом":1, "Долото":1 },
+  "НХО Набор №17-1": { "Тубус":2, "Кусачки":3 },
+  "НХО Набор №17-2": { "Рукоятка":1, "Патрон":2, "Фреза":1 },
+  "НХО Набор №17-3": { "Тубус":2, "Кусачки":3 },
+  "НХО Набор №18": { "Клипсодержатель":5, "Клипсы":25 },
+  "НХО Набор №19": { "Фрагметатор":1, "Кабель":1 },
+  "ТО1 Набор №1": { "Корнцанг":2, "Зажим":12, "Цапка":3, "Ручка":2, "Пинцет":5, "Ножницы":4, "Иглодержатель":2, "Крючки":10, "Распатор":3, "Элеватор":3, "Ложка":3, "Долото":3, "Молоток":1, "Шило":1, "Кусачки":3, "Пассатижи":1, "Крампоны":1, "Щипцы":1, "Костодержатель":2, "Зонд":1, "Спицы":10, "Отвертка":2, "Сверла":3, "Емкость":3 },
+  "ТО1 Набор №2": { "Шило":1, "Рашпиль":9, "Штангерциркуль":1, "Досылатель":1, "Элеватор":2, "Емкость":1, "Крючки":1, "Пинцет":2, "Корнцанг":2, "Зажим":4, "Ранорасширитель":6 },
+  "ТО1 Набор №2-1": { "Фреза":23, "Держатель":2, "Рукоятка":2 },
+  "ТО1 Набор №2-2 СК-1": { "Расширитель":19, "Отвертка":2, "Глубиномер":1, "Экстрактор":2, "Щипцы":1, "Ручка":2, "Импактор":2, "Угломер":1, "Компонент":9, "Сверло":3, "Направитель":1, "Стержень":1, "Головка":16 },
+  "ТО1 Набор №2-2 СК-2": { "Штифт":1, "Инструмент":3, "Ручка":4, "Шпора":1, "Остеотом":2, "Инициатор":1, "Импактор":2, "Молоток":1, "Шаблон":2, "Рашпиль":9, "Шейка":4 },
+  "ТО1 Набор №2-3": { "Рашпиль":10, "Ручка":2, "Головка":8, "Развертка":1, "Ложка":1, "Досыпатель":1, "Утаптыватель":1, "Долото":1, "Досылатель":3, "Сверло":1, "Рукоятка":1 },
+  "ТО1 Набор №2-4": { "Рашпиль":12, "Ручка":1, "Головка":8, "Шейки":6, "Долото":1, "Досылатель":5, "Импактор":2 },
+  "ТО1 Набор №2-5 СК-1": { "Шаблон":7, "Сайзер":1, "Сверло":3, "Импактор":2, "Экстрактор":1, "Пин":5, "Адаптер":2, "Винт":10, "Направитель":1, "Отвертка":1 },
+  "ТО1 Набор №2-5 СК-2": { "Направитель":4, "Ручка":1, "Пины":14, "Ключ":2, "Импактор":7, "Сверло":2, "Рукоятка":2, "Стержень":1, "Рашпиль":3, "Пробник":6 },
+  "ТО1 Набор №2-5 СК-3": { "Вкладыш":9, "Компонент":10, "Шаблон":9, "Спейсер":3 },
+  "ТО1 Набор №2-6 СК-1": { "Ример":13, "Чаша":9, "Вкладыш":11, "Головка":13, "Импактор":2, "Направитель":2, "Экстрактор":1, "Ключ":2, "Молоток":1, "Рукоятка":1, "Сверло":3, "Держатель":3, "Глубомер":1, "Щипцы":1, "Отвертка":2 },
+  "ТО1 Набор №2-6 СК-2": { "Долото":2, "Ример":1, "Держатель":3, "Экстрактор":3, "Импактор":2, "Головка":7, "Ключ":2, "Рашпиль":10, "Шейка":2 },
+  "ТО1 Набор №2-7 СК-1": { "Рашпиль":1, "Сверло":1, "Стержень":1, "Рукоятка":4, "Штанга":1, "Ориентир":2, "Направитель":6, "Фиксатор":1, "Устройство":1, "Пины":8, "Контроллер":1, "Пин":2, "Импактор":2, "Остеотом":1, "Компонент":10, "Отвертка":1, "Ретрактор":1 },
+  "ТО1 Набор №2-7 СК-2": { "Экстрактор":3, "Ретрактор":1, "Фиксатор":2, "Импактор":2, "Молоток":1, "Блок":7, "Прокладка":1, "Втулка":2, "Пробойник":2, "Направитель":9, "Сверло":2, "Трубка":1, "Стилус":1, "Рукоятка":1, "Пин":4, "Вкладыш":20 },
+  "ТО1 Набор №2-8 СК-1": { "Расширитель":23, "Отвертка":2, "Глубиномер":1, "Экстрактор":2, "Щипцы":1, "Ручка":1, "Импактор":1, "Угломер":1, "Компонент":9, "Сверло":3, "Направитель":1, "Стержень":1, "Головка":4 },
+  "ТО1 Набор №2-8 СК-2": { "Ручка":4, "Головка":24, "Импактор":3, "Рашпиль":1, "Штифт":1, "Инструмент":3, "Шпора":1, "Остеотом":2, "Инициатор":1, "Молоток":1, "Шаблон":2 },
+  "ТО1 Набор №2-8 СК-3": { "Рашпиль":9, "Шейка":6 },
+  "ТО1 Набор №2-9 СК-1": { "Пин":20, "Кюретка":1, "Сверло":4, "Импактор":3, "Направитель":2, "Шток":1, "Экстрактор":2, "Клещи":2, "Отвертка":2, "Толкатель":1, "Извлекатель":1, "Позиционер":1, "Блок":2, "Рукоятка":1, "Наконечник":1 },
+  "ТО1 Набор №2-9 СК-2": { "Сверло":1, "Импактор":1, "Компонент":6, "Рашпиль":3, "Направитель":4, "Экстрактор":1, "Фиксатор":1, "Ручка":1, "Шток":3, "Ретрактор":1, "Сструбцина":1, "Переходник":1, "Проводник":1, "Блок":4, "Резектор":1 },
+  "ТО1 Набор №2-9 СК-3": { "Блок":12 },
+  "ТО1 Набор №2-9 СК-4": { "Коронки":10, "Блок":10 },
+  "ТО1 Набор №2-9 СК-5": { "Направитель":6, "Пластина":1, "Рукоятка":1, "Прокладка":4, "Позиционер":1, "Кронштейн":1 },
+  "ТО1 Набор №3": { "Винт":2, "Держатель":1, "Измеритель":2, "Импактор":1, "Ключ":1, "Молоток":1, "Направитель":11, "Отвертка":1, "Сверло":3, "Спица":1, "Троакар":1, "Шаблон":4, "Шило":1 },
+  "ТО1 Набор №4": { "Сверло":5, "Молоток":1, "Импактор":1, "Держатель":2, "Контейнер":1, "Направитель":13, "Отвертка":4, "Шило":1, "Спица":2, "Измеритель":4, "Кассета":2, "Винт":2, "Троакар":2, "Ключ":1 },
+  "ТО1 Набор №5": { "Винт":3, "Держатель":1, "Измеритель":2, "Импактор":1, "Ключ":1, "Молоток":1, "Направитель":11, "Отвертка":1, "Сверло":3, "Спица":1, "Троакар":4, "Шаблон":4, "Шило":2 },
+  "ТО1 Набор №6": { "Развертки":10 },
+  "ТО1 Набор №7": { "Стержень":10, "Ключи":6, "Спиценатягиватель":1 },
+  "ТО1 Набор №8": { "Стержень":2, "Ключи":1, "Дистрактор":1 },
+  "ТО1 Набор №9": { "Костодержатель":3, "Досылатель":1, "Крючки":4, "Емкость":1, "Пинцет":1, "Корнцанг":2, "Зажим":4, "Ранорасширитель":5, "Проводник":1 },
+  "ТО1 Набор №10": { "Корнцанг":2, "Иглодержатель":1, "Зажим":9, "Ножницы":1, "Цапка":1, "Зонд":1, "Емкость":3, "Молоток":1, "Крампоны":1, "Ручка":1, "Пинцет":2 },
+  "ТО1 Набор №11": { "Корнцанг":2, "Иглодержатель":2, "Зажим":12, "Ножницы":3, "Ручка":3, "Пинцет":5, "Цапка":5, "Крючки":4, "Распатор":4, "Долото":4, "Кусачки":5, "Молоток":1, "Контрактор":2, "Дистрактор":2, "Держатель":3, "Пушер":1, "Домкрат":1, "Отвертка":2, "Удерживатель":1, "Шило":1, "Щуп":1, "Винты":6, "Ранорасширитель":2, "Емкость":4 },
+  "ТО1 Набор №12": { "Костодержатель":7, "Сверло":10, "Направитель":6, "Отвертка":5, "Ручка":2, "Метчик":4 },
+  "ТО1 Набор №13": { "Корнцанг":1, "Иглодержатель":1, "Зажим":1, "Ножницы":1, "Емкость":1, "Ручка":1, "Пинцет":1, "Отвертка":1 },
+  "ТО1 Набор №14": { "Эндоскоп":1, "Световод":1, "Стилет":1, "Ручка":2, "Трубка":2, "Щипцы":3, "Цапка":2, "Иглодержатель":1, "Корнцанг":3, "Зажим":5, "Ножницы":2, "Щуп":2, "Выкусыватель":3 },
+  "ТО1 Набор №15": { "Крючки":4, "Зажим":2, "Ранорасширитель":1, "Иглодержатель":1, "Ручка":1, "Ножницы":1 },
+  "ТО2 Набор №1": { "Корнцанг":3, "Зажим":6, "Иглодержатель":2, "Пинцет":4, "Ножницы":4, "Крючки":6, "Ручка":3, "Цапка":3, "Емкость":2 },
+  "ТО2 Набор №2": { "Микроножницы":2, "Микропинцет":2, "Микроиглодержатель":2 },
+  "ТО2 Набор №3": { "Корнцанг":4, "Зажим":8, "Иглодержатель":2, "Пинцет":4, "Ножницы":6, "Крючки":8, "Ручка":3, "Цапка":4, "Емкость":3, "Кусачки":3, "Крампоны":2, "Распатор":2, "Долото":2, "Ложка":3, "Элеватор":2, "Ранорасширитель":1, "Спицы":12 },
+  "ТО2 Набор №4": { "Сверло":1, "Направитель":1, "Отвертка":1, "Измеритель":1, "Спица":1 },
+  "ТО2 Набор №5": { "Корнцанг":4, "Зажим":8, "Иглодержатель":2, "Пинцет":4, "Ножницы":6, "Крючки":8, "Ручка":3, "Цапка":4, "Емкость":3, "Кусачки":3, "Крампоны":2, "Распатор":2, "Долото":2, "Ложка":3, "Элеватор":2, "Ранорасширитель":1, "Спицы":12 },
+  "ТО2 Набор №6": { "Микроножницы":2, "Микропинцет":2, "Микроиглодержатель":2 },
+  "ТО2 Набор №7": { "Сверло":2, "Направитель":2, "Рабочая часть отвертки":2 },
+  "ОО1 Набор №1": { "Корнцанг":6, "Зажим":15, "Цапка":3, "Ручка":2, "Пинцет":4, "Ножницы":3, "Иглодержатель":3, "Крючки":6, "Распатор":2, "Элеватор":2, "Ложка":3, "Долото":3, "Молоток":1, "Шило":1, "Кусачки":3, "Щипцы":1, "Ретрактор":7, "Емкость":4 },
+  "ОО1 Набор №1-1 СК-1": { "Рашпиль":14, "Ручка":1, "Шаблон":6, "Головка":8, "Досылатель":2, "Экстрактор":1, "Импактор":1, "Резец":1, "Штанга":1, "Адаптор":1 },
+  "ОО1 Набор №1-1 СК-2": { "Ложка":3, "Досылатель":2, "Утаптыватель":1, "Долото":1, "Импактор":1, "Штопор":1, "Установщик":1, "Сверло":2, "Отвертка":2 },
+  "ОО1 Набор №1-1 СК-3": { "Фреза":20, "Держатель":2, "Рукоятка":2 },
+  "ОО1 Набор №1-1 СК-4": { "Досылатель":4, "Отвертка":3, "Направитель":2, "Сверло":4, "Глубомер":1, "Щипцы":1, "Держатель":1, "Импактор":1 },
+  "ОО1 Набор №2": { "Корнцанг":3, "Зажим":12, "Иглодержатель":3, "Ножницы":3, "Пинцет":4, "Ручка":2, "Цапка":3, "Крючки":8, "Распатор":4, "Долото":4, "Молоток":1, "Элеватор":2, "Шило":1, "Ложка":2, "Костодержатель":2, "Кусачки":2, "Емкость":4 },
+  "ОО1 Набор №2-1 СК-1": { "Пины":20, "Кюретка":1, "Сверло":4, "Импактор":3, "Направитель":2, "Шток":1, "Экстрактор":2, "Клещи":2, "Отвертка":2, "Толкатель":1, "Извлекатель":1, "Позиционер":1, "Блок":2, "Рукоятка":1, "Наконечник":1 },
+  "ОО1 Набор №2-1 СК-2": { "Сверло":1, "Импактор":1, "Компонент":6, "Рашпиль":3, "Направитель":4, "Экстрактор":1, "Фиксатор":1, "Ручка":1, "Шток":3, "Ретрактор":1, "Сструбцина":1, "Переходник":1, "Проводник":1, "Блок":4, "Резектор":1 },
+  "ОО1 Набор №2-1 СК-3": { "Блок":12 },
+  "ОО1 Набор №2-1 СК-4": { "Коронки":10, "Блок":10 },
+  "ОО1 Набор №2-1 СК-5": { "Направитель":6, "Пластина":1, "Рукоятка":1, "Прокладка":4, "Позиционер":1, "Кронштейн":1 },
+  "ОО1 Набор №3-1": { "Манипулятор":2, "Граспер":2, "Пробойник":2, "Метчик":2, "Молоток":1, "Толкатель":1, "Направитель":2, "Сверло":2, "Крючок":1, "Ножницы":2, "Проводник":8, "Рашпиль":2, "Либиратор":2, "Стик":1 },
+  "ОО1 Набор №4": { "Корнцанг":3, "Зажим":10, "Иглодержатель":3, "Ножницы":3, "Пинцет":4, "Ручка":4, "Цапка":4, "Крючки":10, "Распатор":2, "Элеватор":3, "Долото":3, "Молоток":1, "Кусачки":3, "Ложка":2, "Крампоны":1, "Шило":1, "Емкость":3 },
+  "ОО1 Набор №5": { "Сверло":5, "Направитель":5, "Отвертка":5, "Измеритель":2, "Спица":3 },
+  "ОО1 Набор №5/4": { "Сверло":5, "Молоток":1, "Импактор":1, "Держатель":2, "Контейнер":1, "Направитель":14, "Отвертка":4, "Спица":2, "Шило":1, "Измеритель":3, "Кассета":2, "Винт":2, "Троакар":2, "Ключ":1 },
+  "ОО1 Набор №5/5": { "Винт":2, "Держатель":1, "Измеритель":2, "Импактор":1, "Ключ":1, "Молоток":1, "Направитель":11, "Отвертка":1, "Сверло":3, "Спица":1, "Троакар":1, "Шаблон":4, "Шило":1 },
+  "ОО1 Набор №5/6": { "Винт":3, "Держатель":1, "Измеритель":2, "Импактор":1, "Ключ":1, "Молоток":1, "Направитель":11, "Отвертка":1, "Сверло":3, "Спица":1, "Троакар":4, "Шаблон":4, "Шило":2 },
+  "ОО1 Набор №6": { "Зажим":6, "Диссектор":2, "Ножницы":2, "Лоток":2, "Долото":1, "Кюретка":1, "Спица":2, "Отвертка":2, "Пробойник":1, "Планка":3, "Стример":2, "Направитель":4, "Сверло":10, "Проводник":2, "Манипулятор":1, "Гильза":8, "Молоток":1 },
+  "ОО1 Набор №7": { "Корнцанг":2, "Зажим":5, "Иглодержатель":2, "Ножницы":2, "Пинцет":2, "Ручка":2, "Цапка":2, "Шахта":1, "Стик":1, "Щуп":1, "Кусачки":3, "Граспер":1, "Емкость":1 },
+  "ОО1 Набор №8": { "Корнцанг":2, "Зажим":12, "Иглодержатель":2, "Ножницы":3, "Пинцет":4, "Ручка":2, "Цапка":3, "Крючки":9, "Распатор":2, "Элеватор":2, "Рашпиль":1, "Долото":2, "Молоток":1, "Кусачки":3, "Крампоны":1, "Ложка":2, "Спицы":5, "Сверло":3, "Отвертка":3, "Емкость":3 },
+  "ОО1 Набор №13": { "Кольца":9, "Штанги":12, "Болты":20, "Гайки":20, "Шайбы":10, "Спицы":20, "Ключи":6, "Кусачки":1, "Пассатижи":1, "Крампоны":1 },
+  "ОО1 Набор №14": { "Игла":1, "Проволока":1, "Кусачки":1, "Пассатижи":1, "Крампоны":1 },
+  "ОО1 Набор №15": { "Кольца":4, "Штанги":4, "Болт":10, "Гайка":10, "Шайба":6, "Стержень":4, "Ключ":2 },
+  "ОО2 Набор №3-2": { "Манипулятор":2, "Граспер":2, "Пробойник":2, "Метчик":2, "Толкатель":1, "Направитель":2, "Сверло":3, "Крючок":1, "Ножницы":2, "Проводник":8, "Рашпиль":2, "Либиратор":2, "Стик":1 },
+  "ОО2 Набор №8-2": { "Корнцанг":2, "Зажим":12, "Иглодержатель":2, "Ножницы":3, "Пинцет":4, "Ручка":2, "Цапка":3, "Крючки":9, "Распатор":2, "Элеватор":2, "Рашпиль":1, "Долото":2, "Молоток":1, "Кусачки":3, "Крампоны":1, "Ложка":2, "Спицы":5, "Сверло":3, "Отвертка":3, "Емкость":3 },
+  "ОО2 Набор №9": { "Корнцанг":3, "Зажим":5, "Иглодержатель":2, "Ножницы":2, "Пинцет":2, "Ручка":2, "Цапка":2, "Шахта":1, "Стик":1, "Щуп":1, "Кусачки":3, "Граспер":1, "Емкость":1, "Кюретка":1, "Долото":1, "Диссектор":1, "Молоток":1 },
+  "ОО2 Набор №10": { "Корнцанг":6, "Зажим":15, "Цапка":3, "Ручка":2, "Пинцет":4, "Ножницы":3, "Иглодержатель":3, "Крючки":6, "Распатор":2, "Элеватор":2, "Ложка":3, "Долото":3, "Молоток":1, "Шило":1, "Кусачки":3, "Щипцы":1, "Ретрактор":10, "Насадка":1, "Ключ":1, "Емкость":4 },
+  "ОО2 Набор №10-1 СК-1": { "Рашпиль":14, "Ручка":1, "Шаблон":6, "Головка":8, "Досылатель":2, "Экстрактор":1, "Импактор":1, "Резец":1, "Штанга":1, "Адаптор":1 },
+  "ОО2 Набор №10-1 СК-2": { "Ложка":3, "Досылатель":2, "Утаптыватель":1, "Долото":1, "Импактор":2, "Штопор":1, "Установщик":1, "Сверло":2, "Отвертка":2 },
+  "ОО2 Набор №10-1 СК-3": { "Фреза":20, "Держатель":2, "Рукоятка":2 },
+  "ОО2 Набор №10-1 СК-4": { "Досылатель":3, "Отвертка":3, "Направитель":2, "Сверло":4, "Глубомер":1, "Щипцы":1, "Держатель":1, "Импактор":1 },
+  "ОО2 Набор №11": { "Пассатижи":1, "Рукоятка":2, "Насадка":2, "Лоток":2, "Долото":2, "Кюретка":1, "Спица-проводник":2, "Отвертка":2, "Пробойник":1, "Планка":3, "Стример":4, "Направитель":4, "Сверло":10, "Проводник":1, "Зажим":2, "Манипулятор":1 },
+  "ОО2 Набор №12": { "Корнцанг":3, "Зажим":12, "Иглодержатель":3, "Ножницы":3, "Пинцет":4, "Ручка":2, "Цапка":3, "Крючки":8, "Распатор":4, "Долото":4, "Молоток":1, "Элеватор":2, "Шило":1, "Ложка":2, "Костодержатель":2, "Кусачки":2, "Емкость":4 },
+  "ОО2 Набор №12-1 СК-1": { "Пины":20, "Кюретка":1, "Сверло":4, "Импактор":3, "Направитель":2, "Шток":1, "Экстрактор":2, "Клещи":2, "Отвертка":2, "Толкатель":1, "Извлекатель":1, "Позиционер":1, "Блок":2, "Рукоятка":1, "Наконечник":1 },
+  "ОО2 Набор №12-1 СК-2": { "Резектор":1, "Блок":4, "Проводник":1, "Переходник":1, "Шток":3, "Сструбцина":1, "Ретрактор":1, "Направитель":4, "Ручка":1, "Фиксатор":1, "Экстрактор":1, "Рашпиль":3, "Компонент":6, "Импактор":1, "Сверло":1 },
+  "ОО2 Набор №12-1 СК-3": { "Примерочный блок":12 },
+  "ОО2 Набор №12-1 СК-4": { "Коронки":10, "Блок":10 },
+  "ОО2 Набор №12-1 СК-5": { "Направитель":6, "Пластина":1, "Рукоятка":1, "Прокладка":4, "Позиционер":1, "Кронштейн":1 },
+  "ОО2 Набор №12-2": { "Рукоятка":4, "Отвертка":2, "Держатель":1, "Ножка":3, "Рашпиль":6, "Дистрактор":1, "Скоба":3, "Зажим":1, "Сверло":2, "Компонент":2, "Направитель":2, "Фреза":4, "Головка":6, "Блок":2, "Молоток":1, "Штанга":2, "Экстрактор":4, "Адаптор":1, "Блокиратор":1, "Муфта":1, "Винт":1, "Спица-направитель":3, "Барашек":1, "Вкладыш":4, "Пробойник":1, "Гленосфера":1, "Аугменты":2, "Опора":1, "Ример":2, "Наконечник":3, "Конус":1, "Пластина":1, "Чашка":1, "Стержень":2, "Вал":2, "Импактор":1, "Ключ":2, "Ретрактор":1, "Долото":2, "Глубиномер":1 }
+};
+
+const STORAGE_KEY = 'tso_sets_state_v10';
+const state = {
+  ob1: { sets: [], imn: [], inputs: {} },
+  nho_to: { sets: [], imn: [], inputs: {} },
+  oo: { sets: [], imn: [], inputs: {} },
+  departments: [],
+  currentDeptName: '',
+  special: { plasmaName: '', plasmaQty: 1, aspiration: 0, camera: 0, drills: '' }
+};
+const DEPT_PREFIXES = { 'ob1': ['ОБ1'], 'nho_to': ['НХО', 'ТО1', 'ТО2'], 'oo': ['ОО1', 'ОО2'] };
+
+function saveAzState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
+function loadAzState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    const parsed = JSON.parse(saved);
+    Object.keys(state).forEach(key => {
+      if (key === 'special') state.special = parsed.special || { plasmaName: '', plasmaQty: 1, aspiration: 0, camera: 0, drills: '' };
+      else if (key === 'departments') state.departments = parsed.departments || [];
+      else if (key === 'currentDeptName') state.currentDeptName = parsed.currentDeptName || '';
+      else if (parsed[key]) { state[key].imn = parsed[key].imn || []; state[key].inputs = parsed[key].inputs || {}; updateAzSetsArrayFromInputs(key); }
+    });
+  } catch (e) {}
+}
+
+function handleAzPlasmaAutoInput() {
+  state.special.plasmaName = document.getElementById('ob2-plasma-name').value;
+  state.special.plasmaQty = parseInt(document.getElementById('ob2-plasma-qty').value) || 1;
+  saveAzState(); renderAzOB2Summary(); renderAzGlobalSummary();
+}
+
+function updateAzSpecialField(field, value) {
+  if (field === 'drills') state.special.drills = value;
+  else state.special[field] = parseInt(value) || 0;
+  saveAzState(); renderAzOB2Summary(); renderAzGlobalSummary();
+}
+
+function getAzSetKeysByPrefixes(prefixes) { return Object.keys(SETS).filter(k => prefixes.some(p => k.startsWith(p))); }
+
+function initAzTables() {
+  Object.keys(DEPT_PREFIXES).forEach(dept => {
+    const prefixes = DEPT_PREFIXES[dept];
+    const tbody = document.getElementById(dept + '-sets-table-body');
+    if (!tbody) return;
+    if (!state[dept].inputs) state[dept].inputs = {};
+    const keys = getAzSetKeysByPrefixes(prefixes);
+    let html = '';
+    keys.forEach(key => {
+      const inputs = state[dept].inputs[key] || { serials: '', qty: '' };
+      const serialsDisabled = inputs.qty ? 'disabled' : '';
+      const qtyDisabled = inputs.serials ? 'disabled' : '';
+      html += `
+        <tr data-key="${key}">
+          <td style="font-weight:600; color:#334155;">${key}</td>
+          <td><input type="text" class="col-serials" value="${inputs.serials}" placeholder="Напр: 1, 3, 5" oninput="handleAzSetInput('${dept}', '${key}', 'serials', this)" ${serialsDisabled}></td>
+          <td><input type="number" class="col-qty" value="${inputs.qty}" placeholder="Кол-во шт." min="1" oninput="handleAzSetInput('${dept}', '${key}', 'qty', this)" ${qtyDisabled}></td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = html;
+  });
+  document.getElementById('ob2-plasma-name').value = state.special.plasmaName || '';
+  document.getElementById('ob2-plasma-qty').value = state.special.plasmaQty || 1;
+  document.getElementById('ob2-aspir-qty').value = state.special.aspiration || 0;
+  document.getElementById('ob2-camera-qty').value = state.special.camera || 0;
+  document.getElementById('ob2-drills-serials').value = state.special.drills || '';
+  document.getElementById('dept-current-name').value = state.currentDeptName || '';
+}
+
+function handleAzSetInput(dept, key, field, element) {
+  const value = element.value;
+  const row = element.closest('tr');
+  const serialsInput = row.querySelector('.col-serials');
+  const qtyInput = row.querySelector('.col-qty');
+  if (field === 'serials') {
+    if (value.trim() !== '') { qtyInput.disabled = true; qtyInput.value = ''; } 
+    else qtyInput.disabled = false;
+  } else if (field === 'qty') {
+    if (value.trim() !== '') { serialsInput.disabled = true; serialsInput.value = ''; } 
+    else serialsInput.disabled = false;
+  }
+  if (!state[dept].inputs) state[dept].inputs = {};
+  state[dept].inputs[key] = { serials: serialsInput.value, qty: qtyInput.value };
+  updateAzSetsArrayFromInputs(dept);
+  saveAzState(); renderAz(dept);
+}
+
+function updateAzSetsArrayFromInputs(dept) {
+  const inputs = state[dept].inputs || {};
+  const newSets = [];
+  Object.keys(inputs).forEach(key => {
+    const data = inputs[key];
+    if (data.serials && data.serials.trim() !== '') {
+      const serials = data.serials.split(',').map(s => s.trim()).filter(s => s);
+      serials.forEach(s => newSets.push({ key: key, displayName: `${key} (${s})`, qty: 1, id: key + '-' + s }));
+    } else if (data.qty && parseInt(data.qty) > 0) {
+      newSets.push({ key: key, displayName: key, qty: parseInt(data.qty), id: key + '-qty' });
+    }
+  });
+  state[dept].sets = newSets;
+}
+
+function addAzIMN(dept) {
+  const name = document.getElementById(dept + '-imn-name').value.trim();
+  const qty = parseInt(document.getElementById(dept + '-imn-qty').value) || 1;
+  if (!name) return alert('Введите название инструмента');
+  state[dept].imn.push({ name: name, qty: qty, id: Date.now() + Math.random() });
+  document.getElementById(dept + '-imn-name').value = '';
+  document.getElementById(dept + '-imn-qty').value = 1;
+  saveAzState(); renderAz(dept);
+}
+
+function removeAzIMN(dept, id) {
+  state[dept].imn = state[dept].imn.filter(i => i.id !== id);
+  saveAzState(); renderAz(dept);
+}
+
+/* --- DEPARTMENTS LOGIC --- */
+function saveDeptName(val) {
+  state.currentDeptName = val;
+  saveAzState();
+}
+function addDeptTool() {
+  const dept = document.getElementById('dept-current-name').value.trim();
+  const name = document.getElementById('dept-tool-name').value.trim();
+  const qty = parseInt(document.getElementById('dept-tool-qty').value) || 1;
+  if (!dept) return alert('Введите название отделения');
+  if (!name) return alert('Введите название инструмента');
+  if (!state.departments) state.departments = [];
+  state.departments.push({ dept, name, qty, id: Date.now() + Math.random() });
+  document.getElementById('dept-tool-name').value = '';
+  document.getElementById('dept-tool-qty').value = 1;
+  saveAzState();
+  renderDept();
+  renderAzGlobalSummary();
+}
+function removeDeptTool(id) {
+  state.departments = state.departments.filter(i => i.id !== id);
+  saveAzState();
+  renderDept();
+  renderAzGlobalSummary();
+}
+function renderDept() {
+  const container = document.getElementById('dept-tools-list');
+  if (!container) return;
+  container.innerHTML = '';
+  if (!state.departments || state.departments.length === 0) {
+    container.innerHTML = '<p style="color:#64748b; font-size:13px;">Нет добавленных инструментов...</p>';
+    document.getElementById('dept-summary-totals').innerHTML = '';
+    document.getElementById('dept-summary-total').innerHTML = '';
+    return;
+  }
+  const grouped = {};
+  state.departments.forEach(i => {
+    if (!grouped[i.dept]) grouped[i.dept] = [];
+    grouped[i.dept].push(i);
+  });
+
+  for (const dept in grouped) {
+    const deptDiv = document.createElement('div');
+    deptDiv.style.marginBottom = '15px';
+    deptDiv.innerHTML = `<h4 style="margin: 0 0 5px 0; color: #1e3a8a;">${dept}</h4>`;
+    const listDiv = document.createElement('div');
+    grouped[dept].forEach(i => {
+      const div = document.createElement('div');
+      div.className = 'imn-item';
+      div.style.display = 'flex';
+      div.style.justifyContent = 'space-between';
+      div.innerHTML = `<span><strong>${i.name}</strong> — ${i.qty} шт.</span><button onclick="removeDeptTool(${i.id})">✕</button>`;
+      listDiv.appendChild(div);
+    });
+    deptDiv.appendChild(listDiv);
+    container.appendChild(deptDiv);
+  }
+  renderDeptSummary();
+}
+function renderDeptSummary() {
+  if (!state.departments || state.departments.length === 0) return;
+  const totals = {};
+  state.departments.forEach(i => { totals[i.name] = (totals[i.name] || 0) + i.qty; });
+  const sorted = Object.entries(totals).sort((a, b) => a[0].localeCompare(b[0]));
+  const processedTotal = state.departments.reduce((sum, i) => sum + i.qty, 0);
+  const checkedTotal = Object.values(totals).reduce((sum, c) => sum + calcAzopiram(c), 0);
+  
+  const container = document.getElementById('dept-summary-totals');
+  container.innerHTML = `
+    <table>
+      <thead><tr><th>Инструмент</th><th>Обработано</th><th>Проверено</th></tr></thead>
+      <tbody>${sorted.map(([n, c]) => `<tr><td>${n}</td><td>${c}</td><td>${calcAzopiram(c)}</td></tr>`).join('')}</tbody>
+    </table>
+  `;
+  document.getElementById('dept-summary-total').innerHTML = `<b>Обработано: ${processedTotal} | Проверено: ${checkedTotal}</b>`;
+}
+
+function clearAzopyram() {
+  if (!confirm('Очистить ВСЕ данные Азопирама? Это действие нельзя отменить.')) return;
+  Object.keys(state).forEach(k => {
+    if (k === 'special') state.special = { plasmaName: '', plasmaQty: 1, aspiration: 0, camera: 0, drills: '' };
+    else if (k === 'departments') state.departments = [];
+    else if (k === 'currentDeptName') state.currentDeptName = '';
+    else { state[k].sets = []; state[k].inputs = {}; state[k].imn = []; }
+  });
+  saveAzState(); initAzTables();
+  Object.keys(state).forEach(k => { if (k !== 'special' && k !== 'departments' && k !== 'currentDeptName') renderAz(k); });
+  renderDept();
+  renderAzGlobalSummary();
+}
+
+function calcAzopiram(count) { return count < 3 ? count : 3; }
+
+function calcAzTotals(dept) {
+  const totals = {};
+  state[dept].sets.forEach(s => {
+    const setData = SETS[s.key];
+    if (!setData) return;
+    Object.entries(setData).forEach(([name, count]) => { totals[name] = (totals[name] || 0) + count * s.qty; });
+  });
+  state[dept].imn.forEach(i => { totals[i.name] = (totals[i.name] || 0) + i.qty; });
+  return totals;
+}
+
+function getAzCategoryStats(categoryType) {
+  let processed = 0, checked = 0;
+  if (categoryType === 'plasma') {
+    if (state.special.plasmaName.trim() !== '') { processed = parseInt(state.special.plasmaQty) || 0; checked = calcAzopiram(processed); }
+  } else if (categoryType === 'camera') {
+    processed = parseInt(state.special.camera) || 0; checked = processed > 0 ? calcAzopiram(processed) : 0;
+  } else if (categoryType === 'drills') {
+    if (state.special.drills && state.special.drills.trim() !== '') {
+      const list = state.special.drills.split(',').map(s => s.trim()).filter(Boolean);
+      processed = list.length; checked = processed > 0 ? calcAzopiram(processed) : 0;
+    }
+  } else if (categoryType === 'aspiration') {
+    processed = parseInt(state.special.aspiration) || 0; checked = processed > 0 ? calcAzopiram(processed) : 0;
+  } else if (categoryType === 'dept') {
+    const totals = {};
+    (state.departments || []).forEach(i => { totals[i.name] = (totals[i.name] || 0) + i.qty; });
+    processed = Object.values(totals).reduce((a, b) => a + b, 0);
+    checked = Object.values(totals).reduce((sum, c) => sum + calcAzopiram(c), 0);
+  } else if (['nho_to', 'oo', 'ob1'].includes(categoryType)) {
+    const totals = calcAzTotals(categoryType);
+    processed = Object.values(totals).reduce((a, b) => a + b, 0);
+    checked = Object.values(totals).reduce((sum, c) => sum + calcAzopiram(c), 0);
+  }
+  return { processed, checked };
+}
+
+function renderAzGlobalSummary() {
+  const tbody = document.getElementById('global-summary-tbody');
+  const tfoot = document.getElementById('global-summary-tfoot');
+  if (!tbody || !tfoot) return;
+  const categories = [
+    { name: '0) Отделения', stats: getAzCategoryStats('dept') },
+    { name: '1) Плазма', stats: getAzCategoryStats('plasma') },
+    { name: '2) Головка камеры', stats: getAzCategoryStats('camera') },
+    { name: '3) Дрели', stats: getAzCategoryStats('drills') },
+    { name: '4) Емкость аспирационная', stats: getAzCategoryStats('aspiration') },
+    { name: '5) ОБ2 (ТО1, ТО2, НХО)', stats: getAzCategoryStats('nho_to') },
+    { name: '6) ОБ2 (ОО1, ОО2)', stats: getAzCategoryStats('oo') },
+    { name: '7) ОБ1', stats: getAzCategoryStats('ob1') }
+  ];
+  let totalProcessedSum = 0, totalCheckedSum = 0, rowsHtml = '';
+  categories.forEach(cat => {
+    totalProcessedSum += cat.stats.processed; totalCheckedSum += cat.stats.checked;
+    rowsHtml += `<tr><td style="font-weight:600; color:#1e3a8a;">${cat.name}</td><td>${cat.stats.processed}</td><td>${cat.stats.checked}</td></tr>`;
+  });
+  tbody.innerHTML = rowsHtml;
+  tfoot.innerHTML = `<tr><td>ИТОГО ПО ВСЕМ ПУНКТАМ:</td><td>${totalProcessedSum}</td><td>${totalCheckedSum}</td></tr>`;
+}
+
+function getAzFormattedSetNames(dept) {
+  const inputs = state[dept] && state[dept].inputs ? state[dept].inputs : {};
+  const setNames = [];
+  const prefixes = DEPT_PREFIXES[dept] || [];
+  const keys = getAzSetKeysByPrefixes(prefixes);
+  keys.forEach(key => {
+    const data = inputs[key];
+    if (data) {
+      const cleanKey = key.replace(/^ОБ2\s*/i, '');
+      if (data.serials && data.serials.trim() !== '') {
+        const serialsList = data.serials.split(',').map(s => s.trim()).filter(s => s);
+        if (serialsList.length > 0) setNames.push(`${cleanKey} (${serialsList.join(', ')})`);
+      } else if (data.qty && parseInt(data.qty) > 0) {
+        const qtyNum = parseInt(data.qty);
+        setNames.push(qtyNum > 1 ? `${cleanKey} (${qtyNum} шт.)` : cleanKey);
+      }
+    }
+  });
+  return setNames;
+}
+
+function renderAz(dept) {
+  renderAzSets(dept); renderAzIMN(dept);
+  if (dept === 'ob1') renderAzOb1Summary();
+  if (dept === 'nho_to' || dept === 'oo') renderAzOB2Summary(); 
+  renderAzGlobalSummary();
+}
+
+function renderAzSets(dept) {
+  const container = document.getElementById(dept + '-sets-list');
+  if (!container) return;
+  container.innerHTML = '';
+  if (state[dept].sets.length === 0) { container.innerHTML = '<p style="color:#64748b; font-size:13px;">Ни один набор не выбран...</p>'; return; }
+  state[dept].sets.forEach(s => {
+    const setData = SETS[s.key];
+    if (!setData) return;
+    const oneSum = Object.values(setData).reduce((a, b) => a + b, 0);
+    const totalSum = oneSum * s.qty;
+    const isSerial = s.displayName !== s.key;
+    let serialToRemove = '';
+    if (isSerial) { const match = s.displayName.match(/\(([^)]+)\)$/); if (match) serialToRemove = match[1]; }
+    const div = document.createElement('div');
+    div.className = 'set-item';
+    div.innerHTML = `
+      <div class="set-item-header">
+        <span>${s.displayName} ${!isSerial ? '— ' + s.qty + ' шт.' : ''}</span>
+        <span>Сумма в 1 наборе: ${oneSum} | Итого: ${totalSum}</span>
+        <button onclick="removeAzSetReactive('${dept}', '${s.key}', '${serialToRemove}', ${isSerial})">✕</button>
+      </div>
+      <div class="set-detail">${Object.entries(setData).map(([n, c]) => `<span>${n}:${c}</span>`).join('')}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function removeAzSetReactive(dept, key, serialToRemove, isSerial) {
+  if (!state[dept].inputs || !state[dept].inputs[key]) return;
+  const inputs = state[dept].inputs[key];
+  if (isSerial) {
+    let serials = inputs.serials.split(',').map(s => s.trim()).filter(s => s);
+    const index = serials.indexOf(serialToRemove);
+    if (index > -1) serials.splice(index, 1);
+    inputs.serials = serials.join(', ');
+  } else { inputs.qty = ''; }
+  const tbody = document.getElementById(dept + '-sets-table-body');
+  if (tbody) {
+    const row = tbody.querySelector(`tr[data-key="${key}"]`);
+    if (row) {
+      const sInput = row.querySelector('.col-serials');
+      const qInput = row.querySelector('.col-qty');
+      sInput.value = inputs.serials; qInput.value = inputs.qty;
+      sInput.disabled = inputs.qty.trim() !== ''; qInput.disabled = inputs.serials.trim() !== '';
+    }
+  }
+  updateAzSetsArrayFromInputs(dept); saveAzState(); renderAz(dept);
+}
+
+function renderAzIMN(dept) {
+  const container = document.getElementById(dept + '-imn-list');
+  if (!container) return;
+  container.innerHTML = '';
+  state[dept].imn.forEach(i => {
+    const div = document.createElement('div');
+    div.className = 'imn-item';
+    div.innerHTML = `<span><strong>${i.name}</strong> — ${i.qty} шт.</span><button onclick="removeAzIMN('${dept}', ${i.id})">✕</button>`;
+    container.appendChild(div);
+  });
+}
+
+function renderAzOb1Summary() {
+  const totals = calcAzTotals('ob1');
+  const azopiramSum = Object.values(totals).reduce((sum, c) => sum + calcAzopiram(c), 0);
+  
+  const setsTotal = state.ob1.sets.reduce((sum, s) => {
+    const setData = SETS[s.key];
+    if (!setData) return sum;
+    return sum + Object.values(setData).reduce((a, b) => a + b, 0) * s.qty;
+  }, 0);
+  const imnTotal = state.ob1.imn.reduce((sum, i) => sum + i.qty, 0);
+  const processedTotal = setsTotal + imnTotal;
+
+  const container = document.getElementById('ob1-summary-totals');
+  const totalEl = document.getElementById('ob1-summary-total');
+  if (!container || !totalEl) return;
+  const sorted = Object.entries(totals).sort((a, b) => a[0].localeCompare(b[0]));
+  container.innerHTML = `<table><thead><tr><th>Инструмент</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody>${sorted.map(([n, c]) => `<tr><td>${n}</td><td>${c}</td><td>${calcAzopiram(c)}</td></tr>`).join('')}</tbody></table>`;
+  totalEl.innerHTML = `<b>Обработано: ${processedTotal} | Проверено: ${azopiramSum}</b>`;
+}
+
+function renderAzOB2Summary() {
+  const container = document.getElementById('ob2-summary-totals');
+  const totalEl = document.getElementById('ob2-summary-total');
+  if (!container || !totalEl) return;
+  let grandTotalChecked = 0, grandTotalProcessed = 0, html = '';
+
+  html += `<div class="summary-group-title">1. Плазма</div>`;
+  if (state.special.plasmaName.trim() !== '') { 
+    const az = calcAzopiram(state.special.plasmaQty); 
+    grandTotalChecked += az; 
+    grandTotalProcessed += state.special.plasmaQty;
+    html += `<table><thead><tr><th>Наименование</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody><tr><td>${state.special.plasmaName}</td><td>${state.special.plasmaQty}</td><td>${az}</td></tr></tbody></table>`; 
+  } else html += `<p style="font-size:13px; color:#64748b;">Не заполнено</p>`;
+
+  html += `<div class="summary-group-title">2. Головка камеры</div>`;
+  if (state.special.camera > 0) { 
+    const az = calcAzopiram(state.special.camera); 
+    grandTotalChecked += az; 
+    grandTotalProcessed += state.special.camera;
+    html += `<table><thead><tr><th>Наименование</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody><tr><td>Головка камеры</td><td>${state.special.camera}</td><td>${az}</td></tr></tbody></table>`; 
+  } else html += `<p style="font-size:13px; color:#64748b;">Не заполнено</p>`;
+
+  html += `<div class="summary-group-title">3. Дрели</div>`;
+  if (state.special.drills && state.special.drills.trim() !== '') { 
+    const drillsList = state.special.drills.split(',').map(s => s.trim()).filter(s => s); 
+    const count = drillsList.length; 
+    const az = calcAzopiram(count); 
+    grandTotalChecked += az; 
+    grandTotalProcessed += count;
+    html += `<table><thead><tr><th>Наименование</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody><tr><td>Дрели (№ ${drillsList.join(', ')})</td><td>${count}</td><td>${az}</td></tr></tbody></table>`; 
+  } else html += `<p style="font-size:13px; color:#64748b;">Не заполнено</p>`;
+
+  html += `<div class="summary-group-title">4. Емкость аспирационная</div>`;
+  if (state.special.aspiration > 0) { 
+    const az = calcAzopiram(state.special.aspiration); 
+    grandTotalChecked += az; 
+    grandTotalProcessed += state.special.aspiration;
+    html += `<table><thead><tr><th>Наименование</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody><tr><td>Емкость аспирационная</td><td>${state.special.aspiration}</td><td>${az}</td></tr></tbody></table>`; 
+  } else html += `<p style="font-size:13px; color:#64748b;">Не заполнено</p>`;
+
+  html += `<div class="summary-group-title">5. ОБ2 НХО, ТО1, ТО2</div>`;
+  const nhoToTotals = calcAzTotals('nho_to');
+  const nhoToSorted = Object.entries(nhoToTotals).sort((a, b) => a[0].localeCompare(b[0]));
+  if (nhoToSorted.length > 0) { 
+    const azSum = Object.values(nhoToTotals).reduce((sum, c) => sum + calcAzopiram(c), 0); 
+    grandTotalChecked += azSum; 
+    grandTotalProcessed += Object.values(nhoToTotals).reduce((sum, c) => sum + c, 0);
+    html += `<table><thead><tr><th>Инструмент</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody>${nhoToSorted.map(([n, c]) => `<tr><td>${n}</td><td>${c}</td><td>${calcAzopiram(c)}</td></tr>`).join('')}</tbody></table>`; 
+  } else html += `<p style="font-size:13px; color:#64748b;">Нет выбранных наборов</p>`;
+
+  html += `<div class="summary-group-title">6. ОБ2 ОО1, ОО2</div>`;
+  const ooTotals = calcAzTotals('oo');
+  const ooSorted = Object.entries(ooTotals).sort((a, b) => a[0].localeCompare(b[0]));
+  if (ooSorted.length > 0) { 
+    const azSum = Object.values(ooTotals).reduce((sum, c) => sum + calcAzopiram(c), 0); 
+    grandTotalChecked += azSum; 
+    grandTotalProcessed += Object.values(ooTotals).reduce((sum, c) => sum + c, 0);
+    html += `<table><thead><tr><th>Инструмент</th><th>Обработано</th><th>Проверено</th></tr></thead><tbody>${ooSorted.map(([n, c]) => `<tr><td>${n}</td><td>${c}</td><td>${calcAzopiram(c)}</td></tr>`).join('')}</tbody></table>`; 
+  } else html += `<p style="font-size:13px; color:#64748b;">Нет выбранных наборов</p>`;
+
+  container.innerHTML = html;
+  totalEl.innerHTML = `<b>Обработано: ${grandTotalProcessed} | Проверено: ${grandTotalChecked}</b>`;
+}
+
+function openAzopyramPrintModal() {
+  generateAzPrintJournal();
+  document.getElementById('print-modal').classList.add('active');
+}
+function closeAzPrintModal() { document.getElementById('print-modal').classList.remove('active'); }
+
+function executeAzPrint() {
+  const hideHeaders = document.getElementById('hide-browser-headers').checked;
+  const originalTitle = document.title;
+  const styleEl = document.getElementById('dynamic-print-style');
+  if (hideHeaders) {
+    document.title = ' ';
+    styleEl.innerHTML = `@media print { @page { margin: 0; } body { padding: 12mm; } }`;
+  } else {
+    styleEl.innerHTML = `@media print { @page { margin: auto; } body { padding: 0; } }`;
+  }
+  window.print();
+  document.title = originalTitle;
+}
+
+function updateAzPrintHeader() { generateAzPrintJournal(); }
+
+function generateAzPrintJournal() {
+  const deptSelect = document.getElementById('print-dept-select').value;
+  const tbody = document.getElementById('journal-table-body-az');
+  tbody.innerHTML = '';
+  const method = document.getElementById('print-method').value;
+  const agent = document.getElementById('print-agent').value;
+  const worker = document.getElementById('print-worker').value;
+
+  function createAzRow(name, processedQty, checkedQty, isSummary = false, agentText = '') {
+    const tr = document.createElement('tr');
+    if (isSummary) tr.className = 'summary-row';
+    tr.innerHTML = `<td contenteditable="true"></td><td contenteditable="true">${method}</td><td contenteditable="true">${agentText}</td><td contenteditable="true" class="col-left">${name}</td><td contenteditable="true">${processedQty}</td><td contenteditable="true">${checkedQty}</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true">${worker}</td>`;
+    return tr;
+  }
+
+  function addAzSection(title, items, setNamesList = []) {
+    if (!items || items.length === 0) return 0;
+    let secProcessed = 0, secChecked = 0;
+    items.forEach((item, index) => {
+      const checked = calcAzopiram(item.qty);
+      secProcessed += item.qty; secChecked += checked;
+      let cellAgentText = '';
+      if (index === 0) cellAgentText = agent;
+      else if (index >= 2) { const setIdx = index - 2; if (setIdx < setNamesList.length) cellAgentText = setNamesList[setIdx]; }
+      tbody.appendChild(createAzRow(item.name, item.qty, checked, false, cellAgentText));
+    });
+    tbody.appendChild(createAzRow(`Итого ${title}`, secProcessed, secChecked, true, ''));
+    return items.length;
+  }
+
+  let totalItemsCount = 0;
+  if (deptSelect === 'dept') {
+    const deptTotals = {};
+    (state.departments || []).forEach(i => { deptTotals[i.name] = (deptTotals[i.name] || 0) + i.qty; });
+    const deptItems = Object.entries(deptTotals).sort((a, b) => a[0].localeCompare(b[0])).map(([name, count]) => ({ name: name, qty: count }));
+    if (deptItems.length > 0) totalItemsCount += addAzSection('Отделения', deptItems, []);
+  } else if (deptSelect === 'ob2') {
+    if (state.special.plasmaName.trim() !== '') totalItemsCount += addAzSection('Плазма', [{ name: state.special.plasmaName, qty: state.special.plasmaQty }], []);
+    if (state.special.camera > 0) totalItemsCount += addAzSection('Головка камеры', [{ name: 'Головка камеры', qty: state.special.camera }], []);
+    if (state.special.drills && state.special.drills.trim() !== '') {
+      const drillsList = state.special.drills.split(',').map(s => s.trim()).filter(s => s);
+      totalItemsCount += addAzSection('Дрели', [{ name: `Дрели (№ ${drillsList.join(', ')})`, qty: drillsList.length }], []);
+    }
+    if (state.special.aspiration > 0) totalItemsCount += addAzSection('Емкость аспирационная', [{ name: 'Емкость аспирационная', qty: state.special.aspiration }], []);
+    
+    const nhoToTotals = calcAzTotals('nho_to');
+    const nhoToItems = Object.entries(nhoToTotals).sort((a, b) => a[0].localeCompare(b[0])).map(([name, count]) => ({ name: name, qty: count }));
+    totalItemsCount += addAzSection('ОБ2 НХО, ТО1, ТО2', nhoToItems, getAzFormattedSetNames('nho_to'));
+
+    const ooTotals = calcAzTotals('oo');
+    const ooItems = Object.entries(ooTotals).sort((a, b) => a[0].localeCompare(b[0])).map(([name, count]) => ({ name: name, qty: count }));
+    totalItemsCount += addAzSection('ОБ2 ОО1, ОО2', ooItems, getAzFormattedSetNames('oo'));
+  } else {
+    const ob1Totals = calcAzTotals('ob1');
+    const ob1Items = Object.entries(ob1Totals).sort((a, b) => a[0].localeCompare(b[0])).map(([name, count]) => ({ name: name, qty: count }));
+    if (ob1Items.length > 0) totalItemsCount += addAzSection('ОБ1', ob1Items, getAzFormattedSetNames('ob1'));
+  }
+
+  if (totalItemsCount === 0) tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:20px;">Нет выбранных элементов для печати</td></tr>`;
+}
+
+function syncDataToAzopyram() {
+  buildWash();
+  state.ob1 = { sets: [], imn: state.ob1.imn, inputs: {} };
+  state.nho_to = { sets: [], imn: state.nho_to.imn, inputs: {} };
+  state.oo = { sets: [], imn: state.oo.imn, inputs: {} };
+
+  function normalizeName(name) {
+    let n = name.trim();
+    if (n.includes(':')) n = n.split(':')[0].trim();
+    if (n.includes('ОБ1 №')) { let num = n.replace('ОБ1 №', '').trim(); return 'ОБ1 Набор ' + num; }
+    n = n.replace('То1', 'ТО1'); n = n.replace('ТО-2', 'ТО2'); n = n.replace('OO1', 'ОО1'); n = n.replace('OO2', 'ОО2'); n = n.replace('СК1', 'СК-1');
+    return n;
+  }
+
+  function processGroup(groupKey, targetState) {
+    document.querySelectorAll(`tr[data-group="${groupKey}"]`).forEach(tr => {
+      const label = tr.dataset.label;
+      const nums = tr.querySelector('.nums').value.trim();
+      const sum = tr.querySelector('.qty').value.trim();
+      const key = normalizeName(label);
+      if (SETS[key]) {
+        if (nums || sum) targetState.inputs[key] = { serials: nums, qty: sum };
+      } else {
+        if (nums || sum) {
+          let qty = 0;
+          if (nums) qty = nums.split(',').filter(s=>s.trim()).length;
+          else qty = parseInt(sum) || 0;
+          if (qty > 0) targetState.imn.push({ name: label, qty: qty, id: Date.now() + Math.random() });
+        }
+      }
+    });
+  }
+
+  processGroup('g1', state.ob1); processGroup('g2', state.nho_to); processGroup('g3', state.oo);
+
+  let plasmaNames = [];
+  let plasmaQty = 0;
+  document.querySelectorAll('.custom-plasma-row').forEach(row => {
+      const n = row.querySelector('.cp-name').value.trim();
+      const q = parseInt(row.querySelector('.cp-qty').value, 10) || 0;
+      if (n && q > 0) {
+          plasmaNames.push(n);
+          plasmaQty += q;
+      }
+  });
+  if (plasmaNames.length > 0) {
+      state.special.plasmaName = plasmaNames.join(', ');
+      state.special.plasmaQty = plasmaQty;
+      document.getElementById('ob2-plasma-name').value = state.special.plasmaName;
+      document.getElementById('ob2-plasma-qty').value = state.special.plasmaQty;
+  }
+
+  const asp = document.getElementById('aspiration').value;
+  state.special.aspiration = parseInt(asp) || 0;
+  document.getElementById('ob2-aspir-qty').value = state.special.aspiration;
+
+  updateAzSetsArrayFromInputs('ob1'); updateAzSetsArrayFromInputs('nho_to'); updateAzSetsArrayFromInputs('oo');
+  saveAzState(); initAzTables(); renderAz('ob1'); renderAz('nho_to'); renderAz('oo'); renderAzGlobalSummary();
+
+  document.querySelector('.tab-btn[data-tab="tab-azopyram"]').click();
+  alert('Данные из журнала мойки успешно перенесены в Журнал Азопирама!');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.tabs > .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tabs > .tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.subtabs').forEach(tabsContainer => {
+    tabsContainer.querySelectorAll('.subtab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parent = tabsContainer.parentElement;
+        parent.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+        parent.querySelectorAll('.subtab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        const content = parent.querySelector('#sub-' + btn.dataset.sub);
+        if(content) content.classList.add('active');
+      });
+    });
+  });
+
+  renderWashGroup('group1', 'g1', G1_ITEMS);
+  renderWashGroup('group2', 'g2', G2_LABELS);
+  renderWashGroup('group3', 'g3', G3_LABELS);
+
+  document.getElementById('hasDepts').addEventListener('change', e => {
+    document.getElementById('deptSection').classList.toggle('hidden', !e.target.checked);
+  });
+  document.getElementById('addDept').addEventListener('click', addWashDeptRow);
+  document.getElementById('setupAutoclaveBtn').addEventListener('click', showAutoclaveSetup);
+  
+  document.getElementById('aspiration').addEventListener('input', updateWashPreview);
+  updateWashPreview();
+
+  loadAzState();
+  initAzTables();
+  Object.keys(state).forEach(k => { if (k !== 'special' && k !== 'departments' && k !== 'currentDeptName') renderAz(k); });
+  renderDept();
+  renderAzGlobalSummary();
+});
+</script>
+</body>
+</html>
